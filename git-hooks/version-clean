@@ -1,0 +1,8 @@
+#!/bin/bash
+#
+# fedora-review version filter, can also be used with
+# file argument.
+#
+
+sed -r ${1:+'-i'} -e "/<property name=.version/s/[0-9a-f]{7,8}/@commit@/"  \
+                  -e "/<property name=.version/s/ [0-9-]+/ @date@/" $1

@@ -1,0 +1,6 @@
+*.log
+*.pyc
+*.pyo
+MANIFEST
+dist
+build

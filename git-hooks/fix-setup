@@ -1,0 +1,17 @@
+#/bin/bash
+#
+# Setup pre and post hooks + some version filtering.
+#
+cd $( dirname $( readlink -fn $0 ))/..
+ln -sf $PWD/git-hooks/pre-commit .git/hooks/pre-commit
+
+fgrep -q '/git-hooks/version-smudge' .git/config || {
+    cat << EOF >> .git/config
+
+# Added by fix-setup
+[filter "fix_version"]
+        smudge = $PWD/git-hooks/version-smudge
+        clean = $PWD/git-hooks/version-clean
+
+EOF
+}

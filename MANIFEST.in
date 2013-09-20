@@ -1,0 +1,3 @@
+include etc-cleaner rpmconf-sudo-askpass etc-cleaner.desktop
+include README.md
+recursive-include data *.glade *.png

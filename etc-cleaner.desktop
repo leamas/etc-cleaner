@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=etc-cleaner
+Comment=Clean up config files in /etc
+Exec=etc-cleaner
+Icon=etc-cleaner
+Terminal=false
+Type=Application
+Categories=System;X-Fedora;
