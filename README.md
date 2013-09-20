@@ -1,7 +1,7 @@
 ## etc-cleaner README
 
 etc-cleaner is a simple GUI application intended to make it easier to
-maintain the configuraition files in /etc. The problem is basically about
+maintain the configuration files in /etc. The problem is basically about
 merging the local changes with the changes made by the package installers
 when updating.
 
@@ -26,9 +26,21 @@ to get root permissions and must be properly configured.
 For the source version
 ```
     $ export PATH=$PWD:$PATH
-    $ ln -s data/ui.glade .
     $ ./etc-cleaner
 ```
+## Extending
+
+The preferences window is basically dead simple, presenting a few precanned
+alternatives. To create other alternatives such as another tool for merging
+or a complete profile, create a new plugin similar to those in the plugins
+directory. Using one existing alternative as a template this is not hard. A
+few cave-eats:
+- Install your own plugins in ~/.local/share/etc-cleaner/plugins or
+  /etc/etc-cleaner/plugins
+- The class name must be unique. A plugin with the same class name as a
+  system plugin will not be loaded.
+- The option_id could be unique or not. If not unique, your plugin will
+  shadow the system one.
 
 ## rpm-config notes.
 This package is inspired by rpm-config. However, here are also some
@@ -39,5 +51,4 @@ changes:
   - The workflow is more user-driven with user picking changes from
     a list instead of being pushed to answer questions for each change.
   - I have tried to isolate the rpm dependencies, which are not really
-    that big. It should be doable to run this on e. g., debian as well.
-
+    that big. An as yet untested dpkg profile serves as proof of concept.

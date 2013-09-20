@@ -1,6 +1,7 @@
 *.log
 *.pyc
 *.pyo
+*.xcf
 MANIFEST
 dist
 build
