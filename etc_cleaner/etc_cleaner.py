@@ -26,6 +26,75 @@ from . import filechange
 from . import prefix
 from . import options
 
+profile = options.profile
+XdgDirs = xdg_dirs.XdgDirs
+
+
+class FileChange(object):
+    ''' A changed configuration file. '''
+    # pylint: disable=W0108
+
+    def __init__(self, pkg_name, paths):
+        self.package = pkg_name
+        self.files = sorted(paths, key = lambda c: len(c))
+        self.basepath = paths[0].replace(profile.backup_suffix, '')
+        self.basepath = self.basepath.replace(profile.pending_suffix, '')
+        self.basename = os.path.basename(self.basepath)
+        self.dirname = os.path.dirname(self.basepath)
+        self._cachedir = os.path.join(XdgDirs.app_cachedir, str(self))
+
+    def setup(self):
+        ''' Create cache dir and copy all files to it. '''
+        if os.path.exists(self._cachedir):
+            shutil.rmtree(self._cachedir)
+        os.makedirs(self._cachedir)
+        cmd = ['sudo', '-A', 'cp', '--preserve']
+        cmd.extend(self.files)
+        cmd.append(self._cachedir)
+        check_output(cmd)
+        check_output(['sudo', '-A', 'chown', '-R', str(os.getuid()),
+                     self._cachedir])
+
+    def __str__(self):
+        return self.package + ':' + self.basename
+
+    def shuffle_up(self, path):
+        ''' Exchange path and path-1 in files. '''
+        for ix, file_  in enumerate(self.files):
+            if file_ == path:
+                assert ix > 0, "Attempt to shuffle up index 0: " + path
+                tmp = self.files[ix - 1]
+                self.files[ix - 1] = self.files[ix]
+                self.files[ix] = tmp
+                break
+        else:
+            print "Cannot shuffle (not found): " + path
+
+    def get_cached(self, index=0):
+        ''' Return full path to cached copy of a files item. '''
+        return os.path.join(self._cachedir,
+                            os.path.basename(self.files[index]))
+
+    def rescan(self):
+        ''' Re-compute files to match what's on filesystem. '''
+        matches = glob(self.basepath + '*')
+        self.files = sorted(matches, key = lambda c: len(c))
+
+    def find_suffix(self, suffix):
+        ''' Find path in files ending with suffix, or 'None'. '''
+        found = [f for f in self.files if f.endswith(suffix)]
+        if found:
+            return os.path.basename(found[0])
+        else:
+            return None
+
+    def name(self):
+        ''' Return package name or ORPHANED_OWNER if unowned. '''
+        return self.package if self.package else options.ORPHANED_OWNER
+
+    backup = property(lambda self: self.find_suffix(profile.backup_suffix))
+    update = property(lambda self: self.find_suffix(profile.pending_suffix))
+
 
 def sudo_setup():
     ''' Verify path to sudo_askpass and set environment. '''
