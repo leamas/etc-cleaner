@@ -43,7 +43,7 @@ setup(name = "etc-cleaner",
     #                                 'etc-cleaner.desktop'] },
     #package_data = {'': ['data', 'etc-cleaner.desktop']},
     #'runner' is in the root.
-    scripts = ["etc-cleaner"],
+    scripts = ["etc-cleaner", 'rpmconf-sudo-askpass'],
     long_description = open('README.md').read()
     #
     #This next part it for the Cheese Shop, look a little down the page.
