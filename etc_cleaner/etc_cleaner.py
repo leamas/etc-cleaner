@@ -645,6 +645,7 @@ def on_prefs_item_activate(item):
 def update_prefs_option(option, label_id, checkbox_id):
     ''' Update a prefs line from the selected option. '''
     label = builder.get_object(label_id)
+    builder.get_object(checkbox_id).set_sensitive(False)
     if option.is_available():
         label.set_text(option.available_msg)
         builder.get_object(checkbox_id).set_active(True)
