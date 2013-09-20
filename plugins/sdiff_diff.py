@@ -1,4 +1,4 @@
-''' Use sdiff to create diff view '''
+''' sdiff diff option. '''
 
 from etc_cleaner.option import DiffOption
 

@@ -44,7 +44,7 @@ class ProfileOption(AbstractOption):
     datadir = '/usr/share/etc-cleaner'
     ''' Where we look for e. g., ui.glade.'''
 
-    max_viewsize = -1
+    max_viewsize = 15000
     ''' Max # of bytes presented in "View" button. '''
 
     def cs(self, path):

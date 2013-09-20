@@ -1,4 +1,4 @@
-''' default, RPM-based profile  '''
+''' Default, RPM-based profile  '''
 
 from subprocess  import check_output, CalledProcessError
 
@@ -13,8 +13,6 @@ class RpmProfileOption(ProfileOption):
     available_msg = 'Use rpm-based default configuration.'
     backup_suffix = '.rpmsave'
     pending_suffix = '.rpmnew'
-    datadir = '/usr/share/etc-cleaner'
-    max_viewsize = 15000
 
     def get_owner(self, path):
         try:

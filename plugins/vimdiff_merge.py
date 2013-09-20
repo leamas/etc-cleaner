@@ -1,4 +1,4 @@
-''' Use meld as merge tool  '''
+''' vim  merge option.  '''
 
 from etc_cleaner.option import MergeOption
 

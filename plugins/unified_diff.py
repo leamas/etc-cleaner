@@ -1,10 +1,10 @@
-''' Unified diff as diff view '''
+''' Unified diff diff option. '''
 
 from etc_cleaner.option import DiffOption
 
 
 class UnifiedDiffOption(DiffOption):
-    ''' Default diff using diff -U. '''
+    ''' diff using diff -U. '''
 
     option_id = 'Unified diff'
     unavailable_msg = 'Install package diffutils to enable.'

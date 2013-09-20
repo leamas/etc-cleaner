@@ -1,4 +1,4 @@
-''' default, RPM-based profile  '''
+''' dpkg-based profile  '''
 
 from subprocess  import check_output, CalledProcessError
 
@@ -13,8 +13,6 @@ class DpkgProfileOption(ProfileOption):
     available_msg = 'Use dpkg-based configuration.'
     backup_suffix = '.dpkg-old'
     pending_suffix = '.dpkg-dist'
-    max_viewsize = 15000
-    datadir = '/usr/share/etc-cleaner'
 
     def get_owner(self, path):
         try:

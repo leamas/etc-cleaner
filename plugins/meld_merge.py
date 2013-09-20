@@ -1,4 +1,4 @@
-''' Use meld as merge tool  '''
+''' meld merge tool option.  '''
 
 from etc_cleaner.option import MergeOption
 
