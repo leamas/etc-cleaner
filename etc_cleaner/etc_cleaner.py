@@ -37,6 +37,7 @@ class FileChange(object):
     def __init__(self, pkg_name, paths):
         self.package = pkg_name
         self.files = sorted(paths, key = lambda c: len(c))
+        self.files = [f for f in self.files if os.path.isfile(f)]
         self.basepath = paths[0].replace(profile.backup_suffix, '')
         self.basepath = self.basepath.replace(profile.pending_suffix, '')
         self.basename = os.path.basename(self.basepath)
