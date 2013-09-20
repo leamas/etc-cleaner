@@ -86,7 +86,7 @@ class FileChange(object):
         if found:
             return os.path.basename(found[0])
         else:
-            return 'None'
+            return None
 
     def name(self):
         ''' Return package name or ORPHANED_OWNER if unowned. '''
