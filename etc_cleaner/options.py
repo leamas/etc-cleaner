@@ -9,6 +9,7 @@ import sys
 
 from . import xdg_dirs
 from .option import MergeOption, DiffOption, ProfileOption
+from .prefix import prefix_option
 
 
 ORPHANED_OWNER = 'orphaned'
@@ -66,10 +67,6 @@ def _restore():
     global merge_option
     global profile
 
-    profile = profiles_by_id[DEFAULT_PROFILE]
-    diff_option = diff_options_by_id[DEFAULT_DIFF_OPTION]
-    merge_option = merge_options_by_id[DEFAULT_MERGE_OPTION]
-
     path = os.path.join(xdg_dirs.XdgDirs.app_configdir, 'options.rc')
     if not os.path.exists(path):
         return False
@@ -121,9 +118,7 @@ def _load_dir(dir_):
 
 def _load_plugins():
     ''' Load all option plugins. '''
-    appdir = os.path.join(os.path.realpath(os.path.dirname(__file__)),
-                          'plugins')
-    _load_dir(appdir)
+    _load_dir(os.path.join(prefix_option.prefix, 'plugins'))
     _load_dir(os.path.join(SITEDIR, 'plugins'))
     _load_dir(os.path.join(xdg_dirs.XdgDirs.app_datadir, 'plugins'))
 

@@ -25,6 +25,7 @@ from gi.repository.Pango import FontDescription  # pylint: disable=F0401,E0611
 
 from . import xdg_dirs
 from . import options
+from . import prefix
 
 profile = options.profile
 XdgDirs = xdg_dirs.XdgDirs
@@ -216,6 +217,7 @@ def connect_signals():
         "on_about_item_activate": on_about_item_activate,
         "on_prefs_item_activate": on_prefs_item_activate,
         "on_profile_combo_changed": on_profile_combo_changed,
+        "on_prefix_combo_changed": on_prefix_combo_changed,
     }
     builder.connect_signals(handlers)
 
@@ -231,7 +233,7 @@ def rebuild_merge_window(change):
     def set_info_label(change):
         ''' Compute the label explaing change status. '''
         if change.package == options.ORPHANED_OWNER:
-            msg = options.MSG_ORPHANED %{'dir': change.dirname}
+            msg = options.MSG_ORPHANED % {'dir': change.dirname}
         elif change.backup:
             msg = options.MSG_UPDATED % {'basename': change.basename,
                                          'dir': change.dirname,
@@ -456,6 +458,10 @@ def rebuild_prefs_window():
                options.diff_option.option_id,
                options.diff_options_by_id,
                on_diff_combo_changed)
+    init_combo("prefix_combo",
+               prefix.prefix_option.option_id,
+               prefix.prefix_options_by_id,
+               on_prefix_combo_changed)
     w.set_size_request(600, 400)
     return w
 
@@ -690,6 +696,18 @@ def on_diff_combo_changed(combo):
     option = options.diff_options_by_id[option_id]
     if update_prefs_option(option, "diff_info_label", 'diff_checkbox'):
         options.diff_option = option
+    return True
+
+
+def on_prefix_combo_changed(combo):
+    ''' user selected a installation prefix preference. '''
+    tree_iter = combo.get_active_iter()
+    if tree_iter is None:
+        return True
+    option_id = combo.get_model()[tree_iter][0]
+    option = prefix.prefix_options_by_id[option_id]
+    if update_prefs_option(option, "prefix_info_label", 'prefix_checkbox'):
+        prefix.prefix_option = option
     return True
 
 

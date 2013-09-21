@@ -70,4 +70,5 @@ class DiffOption(AbstractOption):
     ''' A possible alternative when choosing merge command. '''
     cmd = None
 
+
 # vim: set expandtab ts=4 sw=4:

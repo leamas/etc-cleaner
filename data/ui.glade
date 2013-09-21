@@ -707,7 +707,7 @@
       </object>
     </child>
   </object>
-  <object class="GtkListStore" id="profile_store">
+  <object class="GtkListStore" id="prefix_store">
     <columns>
       <!-- column-name option_id -->
       <column type="gchararray"/>
@@ -731,7 +731,7 @@
               <object class="GtkTable" id="table1">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="n_rows">3</property>
+                <property name="n_rows">4</property>
                 <property name="n_columns">4</property>
                 <child>
                   <object class="GtkLabel" id="profile_header">
@@ -948,6 +948,81 @@
                     <property name="x_padding">10</property>
                   </packing>
                 </child>
+                <child>
+                  <object class="GtkLabel" id="prefix_header">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="xalign">0</property>
+                    <property name="label" translatable="yes">Installation prefix</property>
+                  </object>
+                  <packing>
+                    <property name="top_attach">3</property>
+                    <property name="bottom_attach">4</property>
+                    <property name="x_options">GTK_FILL</property>
+                    <property name="y_options">GTK_FILL</property>
+                    <property name="x_padding">10</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkAlignment" id="prefix_combo_align">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="xalign">0</property>
+                    <property name="xscale">0</property>
+                    <property name="yscale">0</property>
+                    <child>
+                      <object class="GtkComboBox" id="prefix_combo">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="model">prefix_store</property>
+                        <property name="active">0</property>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="right_attach">2</property>
+                    <property name="top_attach">3</property>
+                    <property name="bottom_attach">4</property>
+                    <property name="x_options">GTK_FILL</property>
+                    <property name="y_options">GTK_FILL</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkCheckButton" id="prefix_checkbox">
+                    <property name="label" translatable="yes">Available</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">False</property>
+                    <property name="active">True</property>
+                    <property name="draw_indicator">True</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">2</property>
+                    <property name="right_attach">3</property>
+                    <property name="top_attach">3</property>
+                    <property name="bottom_attach">4</property>
+                    <property name="x_options">GTK_FILL</property>
+                    <property name="y_options">GTK_FILL</property>
+                    <property name="x_padding">10</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="prefix_info_label">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="xalign">0</property>
+                    <property name="yalign">0.49000000953674316</property>
+                    <property name="label" translatable="yes">Dynamic text describing item</property>
+                    <property name="wrap">True</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">3</property>
+                    <property name="right_attach">4</property>
+                    <property name="top_attach">3</property>
+                    <property name="bottom_attach">4</property>
+                  </packing>
+                </child>
               </object>
               <packing>
                 <property name="expand">True</property>
@@ -986,6 +1061,12 @@
         </child>
       </object>
     </child>
+  </object>
+  <object class="GtkListStore" id="profile_store">
+    <columns>
+      <!-- column-name option_id -->
+      <column type="gchararray"/>
+    </columns>
   </object>
   <object class="GtkWindow" id="view_window">
     <property name="can_focus">False</property>
