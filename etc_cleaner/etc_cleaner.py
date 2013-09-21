@@ -57,6 +57,12 @@ class FileChange(object):
         check_output(['sudo', '-A', 'chown', '-R', str(os.getuid()),
                      self._cachedir])
 
+    def update_from_cache(self):
+        ''' Copy the modified value in cache to /etc target. '''
+        cmd = ['sudo', '-A', 'cp']
+        cmd.extend([self.get_cached(), self.basepath])
+        subprocess.call(cmd)
+
     def __str__(self):
         return self.package + ':' + self.basename
 
@@ -516,9 +522,7 @@ def on_merge_merge_btn_clicked(button, change):
             on_main_refresh_clicked()
             p.join()
             if old_cs != cs(path0):
-                cmd = ['sudo', '-A', 'cp']
-                cmd.extend([path0, change.basepath])
-                subprocess.call(cmd)
+                change.update_from_cache()
             change.rescan()
             w = rebuild_merge_window(change)
             w. show_all()
@@ -720,13 +724,16 @@ def on_prefix_combo_changed(combo):
 
 def on_prefs_ok_btn_clicked(button):
     ''' 'OK' button on preferences window. '''
+    import pdb; pdb.set_trace()
     options.save()
+    prefix.save()
     return True
 
 
 def on_prefs_window_delete_event(window, event):
     ''' Prefs window close event. '''
     options.save()
+    prefix.save()
     window.hide()
     return True
 
