@@ -1,0 +1,69 @@
+.TH "etc-cleaner" 1
+.SH NAME
+etc-cleaner \- Handle merging and clean-up of /etc config files.
+
+.SH SYNOPSIS
+.B etc-cleaner
+
+.SH DESCRIPTION
+
+A small, graphical utility which makes it easier to maintain configuration
+files. The basic issue is to merge the local changes with those from the
+package vendors.
+.PP
+The program displays all files which have been changed. User can pick any
+of these and in a new window she can merge versions, delete unused files or
+just view a diff or the plain files.
+.PP
+There are no command line options
+.PP
+etc-cleaner is designed to be distro-agnostic. As of now there are profiles
+for dpkg (untested) and rpm-based distros.
+.SH EXTENDING
+etc-cleaner is configured using a simple preferences dialog. The alternatives
+here are defined in the plugins directory. User can extend the configuration
+options by adding new plugins. As of current, there are plugins which defines
+the diff command used, the merge command and the overall profile.
+.PP
+To create a new plugin using one of the existing as a template should be§
+reasonably easy even without python knowledge. Some hints:
+.IP \(bu 3
+User defined plugins are installed in ~/.local/share/etc-cleaner/plugins or
+in /etc/etc-cleaner/plugins.
+.IP \(bu 3
+The plugin class name must be unique. A plugin with the same class name as
+a system plugin will not be loaded.
+.IP \(bu 3
+The option_id may or may not be unique. If not unique, the user plugin
+shadows the system one.
+.fi
+
+.SH FILES
+.I ~/.config/etc-cleaner/plugins
+.RS
+User defined plugins directory
+.RE
+.I /.config/etc-cleaner/options.rc
+.RS
+Stored options
+.RE
+.I /etc/etc-cleaner/plugins
+.RS
+Site plugins directory
+
+
+.SH ENVIRONMENT
+.TP
+.B XDG_DATA_HOME
+etc-cleaner respects XDG_DATA_HOME which defaults to ~/.local/share. E. g.,
+the personal data directory with plugins is by default
+~/.local/share/fedora-review/plugins, but is
+$XDG_DATA_HOME/etc-cleaner/plugins if XDG_DATA_HOME is set. See FILES.
+
+.SH SEE ALSO
+.TP
+rpmconfig(1)
+CLI tool with similar scope.
+.TP
+https://github.com/leamas/etc-cleaner
+source, issue tracker, etc.
