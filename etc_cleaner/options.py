@@ -22,7 +22,7 @@ MSG_PENDING = '''Package %(pkg)s has installed a new version of %(basename)s
 called %(update)s in %(dir)s. %(basename)s has not been changed.'''
 
 MSG_ORPHANED = '''Packages have been removed leaving stale configuration
-files.'''
+files in %(dir)s.'''
 
 DEFAULT_PROFILE = 'Fedora RPM (default)'
 

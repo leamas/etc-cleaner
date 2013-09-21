@@ -231,7 +231,7 @@ def rebuild_merge_window(change):
     def set_info_label(change):
         ''' Compute the label explaing change status. '''
         if change.package == options.ORPHANED_OWNER:
-            msg = options.MSG_ORPHANED
+            msg = options.MSG_ORPHANED %{'dir': change.dirname}
         elif change.backup:
             msg = options.MSG_UPDATED % {'basename': change.basename,
                                          'dir': change.dirname,
