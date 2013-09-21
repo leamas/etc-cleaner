@@ -97,6 +97,16 @@
                         <signal name="activate" handler="on_about_item_activate" swapped="no"/>
                       </object>
                     </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="manpage_item">
+                        <property name="label">manpage</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="image">image2</property>
+                        <property name="use_stock">False</property>
+                        <signal name="activate" handler="on_manpage_item_activate" swapped="no"/>
+                      </object>
+                    </child>
                   </object>
                 </child>
               </object>
@@ -314,6 +324,11 @@
       <!-- column-name option_id -->
       <column type="gchararray"/>
     </columns>
+  </object>
+  <object class="GtkImage" id="image2">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="stock">gtk-missing-image</property>
   </object>
   <object class="GtkListStore" id="merge_option_store">
     <columns>
@@ -713,6 +728,12 @@
       <column type="gchararray"/>
     </columns>
   </object>
+  <object class="GtkListStore" id="profile_store">
+    <columns>
+      <!-- column-name option_id -->
+      <column type="gchararray"/>
+    </columns>
+  </object>
   <object class="GtkWindow" id="prefs_window">
     <property name="can_focus">False</property>
     <property name="destroy_with_parent">True</property>
@@ -1061,12 +1082,6 @@
         </child>
       </object>
     </child>
-  </object>
-  <object class="GtkListStore" id="profile_store">
-    <columns>
-      <!-- column-name option_id -->
-      <column type="gchararray"/>
-    </columns>
   </object>
   <object class="GtkWindow" id="view_window">
     <property name="can_focus">False</property>

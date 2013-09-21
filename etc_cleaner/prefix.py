@@ -44,6 +44,7 @@ def _restore():
 class PrefixOption(AbstractOption):
     ''' Installation prefix option. '''
     prefix = None
+    mandir = None
 
 
 class UsrPrefixOption(PrefixOption):
@@ -53,6 +54,7 @@ class UsrPrefixOption(PrefixOption):
     available_msg = 'Use installation in /usr, normally a package install.'
     unavailable_msg = 'Nothing is installed in /usr.'
     prefix = '/usr/share'
+    mandir = '/usr/share/man/man1'
 
     def is_available(self):
         return os.path.exists('/usr/share/etc-cleaner')
@@ -65,6 +67,7 @@ class UsrLocalPrefixOption(PrefixOption):
     available_msg = 'Use installation in /usr/local.'
     unavailable_msg = 'Nothing is installed in /usr/local.'
     prefix = '/usr/local/share'
+    mandir = '/usr/local/share/man/man1'
 
     def is_available(self):
         return os.path.exists('/usr/local/share/etc-cleaner')
@@ -78,6 +81,7 @@ class HomePrefixOption(PrefixOption):
     available_msg = 'Use installation in ' + _prefix
     unavailable_msg = 'Nothing is installed in ' + _prefix
     prefix = _prefix
+    mandir = os.path.expanduser('~/man/man1')
 
     def is_available(self):
         return os.path.exists(os.path.join(HomePrefixOption.prefix,
@@ -91,6 +95,7 @@ class SourcePrefixOption(PrefixOption):
     available_msg = 'Use installation in current directory'
     unavailable_msg = 'Nothing is installed in: ' + os.getcwd()
     prefix = os.getcwd()
+    mandir = os.getcwd()
 
     def is_available(self):
         return os.path.exists(os.path.join(os.getcwd(), 'etc_cleaner'))

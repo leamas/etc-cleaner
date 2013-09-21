@@ -215,6 +215,7 @@ def connect_signals():
         "on_refresh_item_activate": on_refresh_item_activate,
         "on_quit_item_activate": Gtk.main_quit,
         "on_about_item_activate": on_about_item_activate,
+        "on_manpage_item_activate": on_manpage_item_activate,
         "on_prefs_item_activate": on_prefs_item_activate,
         "on_profile_combo_changed": on_profile_combo_changed,
         "on_prefix_combo_changed": on_prefix_combo_changed,
@@ -638,6 +639,12 @@ def on_about_item_activate(item):
     d = builder.get_object('about_window')
     d.run()
     d.hide()
+
+
+def on_manpage_item_activate(item):
+    ''' Help| manpage menu item. Open manpage on desktop. '''
+    subprocess.call(['xdg-open',os.path.join(prefix.prefix_option.mandir,
+                                             'etc-cleaner.1')])
 
 
 def on_prefs_item_activate(item):
