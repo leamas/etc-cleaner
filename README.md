@@ -25,6 +25,10 @@ Otherwise, three installation modes are supported using the Makefile:
 To uninstall use the corresponding  uninstall-home, uninstall-local and
 uninstall-usr targets
 
+## Status
+
+This is as yet in the "don't even try me" status.
+
 ## Running
 For the source version
 ```
