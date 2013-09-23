@@ -23,13 +23,8 @@ from gi.repository import GLib                   # pylint: disable=E0611
 from gi.repository.Pango import FontDescription  # pylint: disable=F0401,E0611
 
 from . import filechange
-from . import options
 from . import prefix
-from . import xdg_dirs
-
-
-profile = options.profile
-XdgDirs = xdg_dirs.XdgDirs
+from . import options
 
 
 def sudo_setup():
@@ -44,11 +39,9 @@ def sudo_setup():
 
 def find_gladefile():
     ''' Locate the ui file in current dir or datadir. '''
-    here = os.path.dirname(sys.argv[0])
+    here = os.path.dirname(__file__)
     if os.path.exists(os.path.join(here, 'ui.glade')):
         return os.path.join(here, 'ui.glade')
-    if os.path.exists(os.path.join(profile.datadir, 'ui.glade')):
-        return os.path.join(profile.datadir, 'ui.glade')
     print "Installation error: Cannot find the ui.glade file"
     sys.exit(2)
 
@@ -88,7 +81,7 @@ def get_change_by_name():
     ''' Return dict of FileChange by str(change) needing a merge. '''
 
     change_by_name = {}       # pylint: disable=W0621
-    suffixes = (profile.pending_suffix, profile.backup_suffix)
+    suffixes = (options.profile.pending_suffix, options.profile.backup_suffix)
     cmd = 'sudo -A find /etc ( -name *%s -o -name *%s )' % suffixes
     paths = check_output(cmd.split()).split('\n')
     for path in [p for p in paths if p]:
@@ -288,7 +281,7 @@ def rebuild_merge_window(change):
     btn = builder.get_object("merge_ok_btn")
     reconnect(btn, "clicked", on_merge_ok_btn_clicked, change)
     w = builder.get_object('merge_window')
-    w.set_title(profile.app + ': ' + change.basename)
+    w.set_title(options.profile.app + ': ' + change.basename)
     return w
 
 
@@ -330,7 +323,7 @@ def all_done_window():
 def size_warning_dialog(main_window, what):      # pylint: disable=W0621
     ''' Simple too large text warning dialog. '''
     msg = 'Warning: %s is too large, only showing first' \
-          ' %d bytes.' % (what, profile.max_viewsize)
+          ' %d bytes.' % (what, options.profile.max_viewsize)
     dialog = Gtk.MessageDialog(main_window,
                                Gtk.DialogFlags.DESTROY_WITH_PARENT
                                    | Gtk.DialogFlags.MODAL,
@@ -348,7 +341,7 @@ def show_some_text(text, change):
     buf = textview.get_buffer()
     buf.set_text(text)
     w = builder.get_object('view_window')
-    w.set_title(profile.app + ': ' + change.basename)
+    w.set_title(options.profile.app + ': ' + change.basename)
     w.connect('delete-event', on_window_delete_event)
     b = builder.get_object('view_ok_btn')
     b.connect('clicked', on_view_ok_btn_clicked, change)
@@ -482,9 +475,9 @@ def on_merge_diff_btn_clicked(button, change):
         diff = check_output(cmd.split())
     except subprocess.CalledProcessError as e:
         diff = e.output
-    if len(diff) > profile.max_viewsize:
+    if len(diff) > options.profile.max_viewsize:
         size_warning_dialog(button.get_toplevel(), 'Diff')
-        diff = diff[:profile.max_viewsize]
+        diff = diff[:options.profile.max_viewsize]
     w = show_some_text(diff, change)
     w.show_all()
     return True
@@ -493,10 +486,10 @@ def on_merge_diff_btn_clicked(button, change):
 def on_merge_view_btn_clicked(button, change):
     ''' View button on merge window. '''
     path = change.get_cached()
-    if os.stat(path).st_size > profile.max_viewsize:
+    if os.stat(path).st_size > options.profile.max_viewsize:
         size_warning_dialog(button.get_toplevel(), path)
     with open(path) as f:
-        text = f.read(profile.max_viewsize)
+        text = f.read(options.profile.max_viewsize)
     w = show_some_text(text, change)
     w.show_all()
     return True

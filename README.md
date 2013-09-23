@@ -12,15 +12,18 @@ merge it or just show the diff. There are some screenshots making it more
 clear in the screenshots directory.
 
 ## Installation
-etc\_cleaner  must be in the load path. It works when running off the
-src directory and iff setup.py gets it into a proper location. Use
-PYTHONPATH= if in troubles.
+To test, no installation is needed - the app can be run straight from
+the source tree checked out from git. However, there is then no desktop
+inegration.
 
-the ui.glade file is looked for in the same directory as the etc-cleaner
-script. Create a symlink if in trouble.
+Otherwise, three installation modes are supported using the Makefile:
+- make install-home installs everything under ~/.local with a binary
+  in ~/bin. No root required.
+- make install-local installs everything under /usr/local
+- make install-usr installs everything under /usr
 
-The sudo-askpass helper script must be in $PATH, see below. Sudo is used
-to get root permissions and must be properly configured.
+To uninstall use the corresponding  uninstall-home, uninstall-local and
+uninstall-usr targets
 
 ## Running
 For the source version

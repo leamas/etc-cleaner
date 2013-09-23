@@ -7,7 +7,6 @@ import sys
 
 HERE = os.path.dirname(os.path.realpath(sys.argv[0]))
 
-
 def list_files_in_dir(dir_, extension):
     ''' Return recursive listing of all regular files under dir. '''
     file_list = []
@@ -24,28 +23,17 @@ setup(name = "etc-cleaner",
     author_email = "leamas@nowhere.net",
     url = "whatever",
     packages = ['etc_cleaner'],
-    data_files = [('/usr/share/applications/', ['etc-cleaner.desktop']),
-                  ('/usr/share/etc-cleaner/plugins',
+    data_files = [('applications', ['etc-cleaner.desktop']),
+                  ('etc-cleaner', ['data/ui.glade']),
+                  ('etc-cleaner/plugins',
                       list_files_in_dir('plugins', '.py')),
-                  ('/usr/share/icons/hicolor/32x32',
+                  ('icons/hicolor/32x32/apps',
                      ['data/icons/32x32/etc-cleaner.png']),
-                  ('/usr/share/icons/hicolor/22x22',
+                  ('icons/hicolor/22x22/apps',
                      ['data/icons/22x22/etc-cleaner.png']),
-                  ('/usr/share/icons/hicolor/16x16',
+                  ('icons/hicolor/16x16/apps',
                      ['data/icons/16x16/etc-cleaner.png']),
     ],
-
-    #'package' package must contain files (see list above)
-    #I called the package 'package' thus cleverly confusing the whole issue...
-    #This dict maps the package name =to=> directories
-    #It says, package *needs* these files.
-    #package_data = {'etc-cleaner' : ['data', '/data/icons/32x32/*.png',
-    #                                 'etc-cleaner.desktop'] },
-    #package_data = {'': ['data', 'etc-cleaner.desktop']},
-    #'runner' is in the root.
     scripts = ["etc-cleaner", 'rpmconf-sudo-askpass'],
     long_description = open('README.md').read()
-    #
-    #This next part it for the Cheese Shop, look a little down the page.
-    #classifiers = []
 )

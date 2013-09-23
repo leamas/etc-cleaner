@@ -17,6 +17,10 @@ There are no commandline options.
 import os.path
 import sys
 
+PATH = "/usr/local/bin"
+PYTHONPATH = "/usr/local/lib/python2.7/site-packages"
+# These are patched by installation scripts.
+
 try:
     from gi.repository import Gtk
     Gtk.init(sys.argv)
@@ -24,6 +28,12 @@ except RuntimeError as e:
     print ("etc-cleaner: "  + str(e))
     print ("This is a graphical application and requires DISPLAY to be set.")
     sys.exit(1)
+
+sys.path.insert(0, PYTHONPATH)
+sys.path.insert(0, os.path.join(PYTHONPATH, 'etc-cleaner'))
+
+if not PATH in os.environ['PATH']:
+    os.environ['PATH'] = PATH + ':' + os.environ['PATH']
 
 from etc_cleaner import etc_cleaner
 
