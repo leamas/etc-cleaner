@@ -284,13 +284,14 @@ def rebuild_merge_window(change):
     def add_filedate(grid, path, row, refpath):
         ''' Add date or 'duplicate' to  grid line. '''
 
-        def on_sudo_done(date):
+        def on_sudo_done(date_output):
             ''' sudo done, update date column. '''
-            date = check_output(cmd).split()[5]
+            date = date_output.split()[5]
             label = Gtk.Label(date)
             align = cell_alignment()
             align.add(label)
             grid.attach(align, 2, row, 1, 1)
+            builder.get_object('merge_window').show_all()
 
         if row != 0 and paths_equals(path, refpath):
             label = Gtk.Label('duplicate')
@@ -490,7 +491,7 @@ def on_activate_link(label, href, _change_by_name):
     ''' Handle user clicking change link. '''
     _change_by_name[href].setup()
     w = rebuild_merge_window(_change_by_name[href])
-    w.show_all()
+    # w.show_all()
     if _change_by_name[href].package == options.ORPHANED_OWNER:
         builder.get_object("merge_merge_btn").hide()
         builder.get_object("merge_diff_btn").hide()
@@ -609,7 +610,7 @@ def on_merge_ok_btn_clicked(button, change):
             cmd = ['rm']
             cmd.extend(to_remove)
             run_sudo.run_command(cmd, on_main_refresh_clicked, builder)
-        button.get_toplevel().show()
+        button.get_toplevel().show_all()
 
 
     cached = change.get_cached()

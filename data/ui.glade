@@ -332,6 +332,11 @@
   </object>
   <object class="GtkWindow" id="login_window">
     <property name="can_focus">False</property>
+    <property name="window_position">center</property>
+    <property name="default_width">200</property>
+    <property name="default_height">200</property>
+    <property name="destroy_with_parent">True</property>
+    <property name="type_hint">dialog</property>
     <child>
       <object class="GtkAlignment" id="login_align">
         <property name="visible">True</property>
@@ -349,10 +354,34 @@
                 <property name="xscale">0</property>
                 <property name="left_padding">10</property>
                 <child>
-                  <object class="GtkLabel" id="login_header">
+                  <object class="GtkHBox" id="login_header_hbox">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">sudo password required.</property>
+                    <child>
+                      <object class="GtkImage" id="login_key_image">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="xpad">20</property>
+                        <property name="stock">gtk-dialog-authentication</property>
+                      </object>
+                      <packing>
+                        <property name="expand">True</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel" id="login_header">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">sudo password required.</property>
+                      </object>
+                      <packing>
+                        <property name="expand">True</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
                   </object>
                 </child>
               </object>
@@ -363,7 +392,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtkHBox" id="hbox1">
+              <object class="GtkHBox" id="login_entyry_hbox">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <child>
@@ -412,7 +441,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtkEventBox" id="eventbox1">
+              <object class="GtkEventBox" id="login_eventbox">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <child>
@@ -421,7 +450,7 @@
                     <property name="can_focus">False</property>
                     <property name="right_padding">10</property>
                     <child>
-                      <object class="GtkHButtonBox" id="hbuttonbox4">
+                      <object class="GtkHButtonBox" id="login_hbuttonbox">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="spacing">10</property>
