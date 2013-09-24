@@ -25,6 +25,7 @@ from gi.repository.Pango import FontDescription  # pylint: disable=F0401,E0611
 from . import filechange
 from . import prefix
 from . import options
+from . import run_sudo
 
 profile = options.profile
 XdgDirs = xdg_dirs.XdgDirs
@@ -147,30 +148,39 @@ def reconnect(widget, signal, handler, data):
     setattr(widget, signal_id_attr, id_)
 
 
-def get_change_by_name():
-    ''' Return dict of FileChange by str(change) needing a merge. '''
+def get_change_by_name(do_when_done):
+    ''' Run do_when_done  with a FileChange by str(change) needing
+    a merge as argument.
+    '''
 
-    change_by_name = {}       # pylint: disable=W0621
+    def process_paths(paths):
+        ''' Given a list of paths, compute changes_by_name and
+        invoke do_when_done(changes_by_name)
+        '''
+        if not isinstance(paths, list):
+            paths = paths.split('\n')
+        change_by_name = {}       # pylint: disable=W0621
+        for path in [p for p in paths if p]:
+            configpath = path
+            for suffix in suffixes:
+                configpath = configpath.replace(suffix, '')
+            files = glob(configpath + '*')
+            try:
+                pkg_nvr = check_output(['rpm', '-qf', configpath],
+                                         stderr=open('/dev/null', 'w')).strip()
+                pkg = pkg_nvr.rsplit('-', 2)[0]
+            except subprocess.CalledProcessError:
+                pkg = options.ORPHANED_OWNER
+            change = filechange.FileChange(pkg, files, builder)
+            if str(change) in change_by_name and pkg == options.ORPHANED_OWNER:
+                change_by_name[str(change)].files.extend(files)
+            else:
+                change_by_name[str(change)] = change
+        do_when_done(change_by_name)
+
     suffixes = (options.profile.pending_suffix, options.profile.backup_suffix)
-    cmd = 'sudo -A find /etc ( -name *%s -o -name *%s )' % suffixes
-    paths = check_output(cmd.split()).split('\n')
-    for path in [p for p in paths if p]:
-        configpath = path
-        for suffix in suffixes:
-            configpath = configpath.replace(suffix, '')
-        files = glob(configpath + '*')
-        try:
-            pkg_nvr = check_output(['rpm', '-qf', configpath],
-                                     stderr=open('/dev/null', 'w')).strip()
-            pkg = pkg_nvr.rsplit('-', 2)[0]
-        except subprocess.CalledProcessError:
-            pkg = options.ORPHANED_OWNER
-        change = filechange.FileChange(pkg, files)
-        if str(change) in change_by_name and pkg == options.ORPHANED_OWNER:
-            change_by_name[str(change)].files.extend(files)
-        else:
-            change_by_name[str(change)] = change
-    return change_by_name
+    cmd = 'find /etc ( -name *%s -o -name *%s )' % suffixes
+    run_sudo.run_command(cmd.split(), process_paths, builder)
 
 
 def get_labels(_change_by_name):
@@ -273,16 +283,24 @@ def rebuild_merge_window(change):
 
     def add_filedate(grid, path, row, refpath):
         ''' Add date or 'duplicate' to  grid line. '''
-        if row != 0 and paths_equals(path, refpath):
-            label = Gtk.Label('duplicate')
-        else:
-            cmd = "sudo -A ls -l --time-style +%Y-%m-%d".split()
-            cmd.append(path)
+
+        def on_sudo_done(date):
+            ''' sudo done, update date column. '''
             date = check_output(cmd).split()[5]
             label = Gtk.Label(date)
-        align = cell_alignment()
-        align.add(label)
-        grid.attach(align, 2, row, 1, 1)
+            align = cell_alignment()
+            align.add(label)
+            grid.attach(align, 2, row, 1, 1)
+
+        if row != 0 and paths_equals(path, refpath):
+            label = Gtk.Label('duplicate')
+            align = cell_alignment()
+            align.add(label)
+            grid.attach(align, 2, row, 1, 1)
+        else:
+            cmd = "ls -l --time-style +%Y-%m-%d".split()
+            cmd.append(path)
+            run_sudo.run_command(cmd, on_sudo_done, builder)
 
     def add_delete_box(grid, row):
         ''' Add the delete checkbox to grid line. '''
@@ -575,28 +593,31 @@ def on_merge_ok_btn_clicked(button, change):
     ''' OK button on merge window. Remove files marked for deletion
     and update config file if user has changed cached copy.
     '''
+    def do_when_cache_updated(dummy=None):
+        ''' Cache ok, update ui and remove files.'''
+        to_remove = []
+        grid = builder.get_object('table_align').get_child()
+        for row in range(0, grid.row_count):
+            child = grid.get_child_at(3, row)
+            if child:
+                child = child.get_child()
+            if child and child.get_active():
+                basename = grid.get_child_at(1, row).get_text()
+                path = os.path.join(change.dirname, basename)
+                to_remove.append(path)
+        if to_remove:
+            cmd = ['rm']
+            cmd.extend(to_remove)
+            run_sudo.run_command(cmd, on_main_refresh_clicked, builder)
+        button.get_toplevel().show()
+
 
     cached = change.get_cached()
     if not paths_equals(cached, change.basepath):
-        cmd = ['sudo', '-A', 'cp']
-        cmd.extend([cached, change.basepath])
-        subprocess.call(cmd)
-    to_remove = []
-    grid = builder.get_object('table_align').get_child()
-    for row in range(0, grid.row_count):
-        child = grid.get_child_at(3, row)
-        if child:
-            child = child.get_child()
-        if child and child.get_active():
-            basename = grid.get_child_at(1, row).get_text()
-            path = os.path.join(change.dirname, basename)
-            to_remove.append(path)
-    if to_remove:
-        cmd = ['sudo', '-A', 'rm']
-        cmd.extend(to_remove)
-        subprocess.call(cmd)
-    button.get_toplevel().hide()
-
+        cmd = ['cp', cached, change.basepath]
+        run_sudo.run_command(cmd, do_when_cache_updated, builder)
+    else:
+        do_when_cache_updated()
 
 def on_merge_up_button_click(button, change):
     ''' The ^-button on row. Swap this row and row above. '''
@@ -619,9 +640,13 @@ def on_merge_up_button_click(button, change):
 
 def on_main_refresh_clicked(button=None):
     ''' Main refresh button: recompute pending changes. '''
-    change_by_name_ = get_change_by_name()
-    w = get_main_window(builder, change_by_name_)
-    w.show_all()
+
+    def do_with_change_by_name(change_by_name):
+        ''' dummy docstring. This should be obvious. '''
+        w = get_main_window(builder, change_by_name)
+        w.show_all()
+
+    get_change_by_name(do_with_change_by_name)
 
 
 def on_refresh_item_activate(item):
@@ -727,14 +752,15 @@ def on_prefs_window_delete_event(window, event):
     window.hide()
     return True
 
+def show_main(change_by_name):
+    ''' Display main window and start main loop. '''
+    main_window = get_main_window(builder, change_by_name)
+    main_window.show_all()
 
-sudo_setup()
 builder = Gtk.Builder()
 builder.add_from_file(find_gladefile())
 connect_signals()
-change_by_name = get_change_by_name()
-main_window = get_main_window(builder, change_by_name)
-main_window.show_all()
+get_change_by_name(show_main)
 Gtk.main()
 
 # vim: set expandtab ts=4 sw=4:

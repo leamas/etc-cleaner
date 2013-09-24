@@ -19,7 +19,7 @@ import sys
 
 PATH = os.path.dirname(os.path.realpath(sys.argv[0]))
 PYTHONPATH = PATH
-# These are patched by installation scripts.
+# These are patched by Makefile.
 
 try:
     from gi.repository import Gtk

@@ -4,12 +4,12 @@
 import os
 import os.path
 import shutil
-import subprocess
 
 from glob import glob
 
 from . import xdg_dirs
 from . import options
+from . import run_sudo
 
 profile = options.profile
 XdgDirs = xdg_dirs.XdgDirs
@@ -19,7 +19,7 @@ class FileChange(object):
     ''' A changed configuration file. '''
     # pylint: disable=W0108
 
-    def __init__(self, pkg_name, paths):
+    def __init__(self, pkg_name, paths, builder):
         self.package = pkg_name
         self.files = sorted(paths, key = lambda c: len(c))
         self.files = [f for f in self.files if os.path.isfile(f)]
@@ -27,25 +27,30 @@ class FileChange(object):
         self.basepath = self.basepath.replace(profile.pending_suffix, '')
         self.basename = os.path.basename(self.basepath)
         self.dirname = os.path.dirname(self.basepath)
+        self.builder = builder
         self._cachedir = os.path.join(XdgDirs.app_cachedir, str(self))
 
     def setup(self):
         ''' Create cache dir and copy all files to it. '''
+
+        def cb_copy_done(stdout):
+            ''' Copy done, fix permissions. '''
+            cmd = ['chown', '-R', str(os.getuid()), self._cachedir]
+            run_sudo.run_command(cmd, lambda x: True, self.builder)
+
         if os.path.exists(self._cachedir):
             shutil.rmtree(self._cachedir)
         os.makedirs(self._cachedir)
-        cmd = ['sudo', '-A', 'cp', '--preserve']
+        cmd = ['cp', '--preserve']
         cmd.extend(self.files)
         cmd.append(self._cachedir)
-        subprocess.check_output(cmd)
-        subprocess.check_output(['sudo', '-A', 'chown', '-R',
-                                 str(os.getuid()), self._cachedir])
+        run_sudo.run_command(cmd, cb_copy_done, self.builder)
 
     def update_from_cache(self):
         ''' Copy the modified value in cache to /etc target. '''
         cmd = ['sudo', '-A', 'cp']
         cmd.extend([self.get_cached(), self.basepath])
-        subprocess.call(cmd)
+        run_sudo.run_command(cmd, lambda x: True, self.builder)
 
     def __str__(self):
         return self.package + ':' + self.basename
