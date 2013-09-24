@@ -27,86 +27,6 @@ from . import prefix
 from . import options
 from . import run_sudo
 
-profile = options.profile
-XdgDirs = xdg_dirs.XdgDirs
-
-
-class FileChange(object):
-    ''' A changed configuration file. '''
-    # pylint: disable=W0108
-
-    def __init__(self, pkg_name, paths):
-        self.package = pkg_name
-        self.files = sorted(paths, key = lambda c: len(c))
-        self.files = [f for f in self.files if os.path.isfile(f)]
-        self.basepath = paths[0].replace(profile.backup_suffix, '')
-        self.basepath = self.basepath.replace(profile.pending_suffix, '')
-        self.basename = os.path.basename(self.basepath)
-        self.dirname = os.path.dirname(self.basepath)
-        self._cachedir = os.path.join(XdgDirs.app_cachedir, str(self))
-
-    def setup(self):
-        ''' Create cache dir and copy all files to it. '''
-        if os.path.exists(self._cachedir):
-            shutil.rmtree(self._cachedir)
-        os.makedirs(self._cachedir)
-        cmd = ['sudo', '-A', 'cp', '--preserve']
-        cmd.extend(self.files)
-        cmd.append(self._cachedir)
-        check_output(cmd)
-        check_output(['sudo', '-A', 'chown', '-R', str(os.getuid()),
-                     self._cachedir])
-
-    def __str__(self):
-        return self.package + ':' + self.basename
-
-    def shuffle_up(self, path):
-        ''' Exchange path and path-1 in files. '''
-        for ix, file_  in enumerate(self.files):
-            if file_ == path:
-                assert ix > 0, "Attempt to shuffle up index 0: " + path
-                tmp = self.files[ix - 1]
-                self.files[ix - 1] = self.files[ix]
-                self.files[ix] = tmp
-                break
-        else:
-            print "Cannot shuffle (not found): " + path
-
-    def get_cached(self, index=0):
-        ''' Return full path to cached copy of a files item. '''
-        return os.path.join(self._cachedir,
-                            os.path.basename(self.files[index]))
-
-    def rescan(self):
-        ''' Re-compute files to match what's on filesystem. '''
-        matches = glob(self.basepath + '*')
-        self.files = sorted(matches, key = lambda c: len(c))
-
-    def find_suffix(self, suffix):
-        ''' Find path in files ending with suffix, or 'None'. '''
-        found = [f for f in self.files if f.endswith(suffix)]
-        if found:
-            return os.path.basename(found[0])
-        else:
-            return None
-
-    def name(self):
-        ''' Return package name or ORPHANED_OWNER if unowned. '''
-        return self.package if self.package else options.ORPHANED_OWNER
-
-    backup = property(lambda self: self.find_suffix(profile.backup_suffix))
-    update = property(lambda self: self.find_suffix(profile.pending_suffix))
-
-
-def sudo_setup():
-    ''' Verify path to sudo_askpass and set environment. '''
-    try:
-        sudo_askpass = check_output(['which', 'rpmconf-sudo-askpass']).strip()
-    except subprocess.CalledProcessError:
-        print "Configuration error: can't find rpmconf-sudo-askpass"
-        sys.exit(2)
-    os.environ['SUDO_ASKPASS'] = sudo_askpass
-
 
 def find_gladefile():
     ''' Locate the ui file in current dir or datadir. '''
@@ -284,14 +204,13 @@ def rebuild_merge_window(change):
     def add_filedate(grid, path, row, refpath):
         ''' Add date or 'duplicate' to  grid line. '''
 
-        def on_sudo_done(date_output):
+        def on_sudo_done(date):
             ''' sudo done, update date column. '''
-            date = date_output.split()[5]
+            date = check_output(cmd).split()[5]
             label = Gtk.Label(date)
             align = cell_alignment()
             align.add(label)
             grid.attach(align, 2, row, 1, 1)
-            builder.get_object('merge_window').show_all()
 
         if row != 0 and paths_equals(path, refpath):
             label = Gtk.Label('duplicate')
