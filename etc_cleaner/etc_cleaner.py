@@ -534,7 +534,6 @@ def on_merge_ok_btn_clicked(button, change):
             run_sudo.run_command(cmd, on_main_refresh_clicked, builder)
         button.get_toplevel().show_all()
 
-
     cached = change.get_cached()
     if not paths_equals(cached, change.basepath):
         cmd = ['cp', cached, change.basepath]
