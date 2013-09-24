@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 ''' Run sudo command, possibly prompting for password.  '''
 
+<<<<<<< HEAD
 import os
 import sys
 
@@ -37,6 +38,17 @@ def _show_login_window(command, on_ok, builder, retries):
         dialog.run()
         dialog.destroy()
 
+=======
+import subprocess
+import sys
+
+from subprocess import Popen, PIPE, CalledProcessError, check_output
+
+
+def _show_login_window(command, on_ok, builder):
+    ''' Display login dialog, run on_ok() if password works. '''
+
+>>>>>>> Adding run_sudo.py
     def cb_login_cancel(button):
         ''' Login cancel button: exit, nothing more to do.'''
         print "Login cancelled, exiting"
