@@ -1,0 +1,20 @@
+#!/bin/bash
+#
+# Just display the sudo prompt using bash magic. Writes an empty
+# newline if no password is required.
+#
+export LANG=C
+
+if [ -n "$*" ]; then
+    # We have args i. e., sudo has invoked us as a helper script
+    # with the prompt as $*
+    echo "$@" >&2
+    echo foo
+    kill -TERM $PPID
+    exit 0
+fi
+
+exec 2>  >( grep -v Terminated )
+trap "exit 0" TERM
+sudo -k
+SUDO_ASKPASS=$0 sudo -A sh -c \\"ls /root >/dev/null\\"

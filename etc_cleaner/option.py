@@ -16,7 +16,7 @@ class AbstractOption(object):
 
     def is_available(self):
         ''' Return true if command tool is installed. '''
-        return True
+        raise NotImplementedError
 
     def is_visible(self):
         ''' Return True if option is available on this platorm.'''
@@ -61,7 +61,7 @@ class ProfileOption(AbstractOption):
         Returns:
            - Name of package owning path, or None.
         '''
-        assert False, 'Abstract get_owner called'
+        raise NotImplementedError
 
 
 class MergeOption(AbstractOption):
