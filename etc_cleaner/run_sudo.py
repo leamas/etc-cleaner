@@ -1,11 +1,10 @@
 #!/usr/bin/env python
 ''' Run sudo command, possibly prompting for password.  '''
 
-import subprocess
 import os
 import sys
 
-from gi.repository import Gtk                    # pylint: disable=E0611
+from gi.repository import Gtk        # pylint: disable=no-name-in-module
 from subprocess import Popen, PIPE, CalledProcessError, check_output
 
 from . import prefix

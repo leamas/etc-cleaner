@@ -463,7 +463,8 @@
                       <object class="GtkLabel" id="login_header">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">sudo password required.</property>
+                        <property name="yalign">0.46000000834465027</property>
+                        <property name="ypad">1</property>
                       </object>
                       <packing>
                         <property name="expand">True</property>
