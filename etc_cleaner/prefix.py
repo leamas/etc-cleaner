@@ -55,6 +55,7 @@ class UsrPrefixOption(PrefixOption):
     unavailable_msg = 'Nothing is installed in /usr.'
     prefix = '/usr/share'
     mandir = '/usr/share/man/man1'
+    datadir = '/usr/share/etc-cleaner'
 
     def is_available(self):
         return os.path.exists('/usr/share/etc-cleaner')
@@ -68,6 +69,7 @@ class UsrLocalPrefixOption(PrefixOption):
     unavailable_msg = 'Nothing is installed in /usr/local.'
     prefix = '/usr/local/share'
     mandir = '/usr/local/share/man/man1'
+    datadir = '/usr/local/share/etc-cleaner'
 
     def is_available(self):
         return os.path.exists('/usr/local/share/etc-cleaner')
@@ -82,6 +84,7 @@ class HomePrefixOption(PrefixOption):
     unavailable_msg = 'Nothing is installed in ' + _prefix
     prefix = _prefix
     mandir = os.path.expanduser('~/man/man1')
+    datadir = os.path.expanduser('~/.local/share/etc-cleaner')
 
     def is_available(self):
         return os.path.exists(os.path.join(HomePrefixOption.prefix,
@@ -96,6 +99,7 @@ class SourcePrefixOption(PrefixOption):
     unavailable_msg = 'Nothing is installed in: ' + os.getcwd()
     prefix = os.getcwd()
     mandir = os.getcwd()
+    datadir = os.getcwd()
 
     def is_available(self):
         return os.path.exists(os.path.join(os.getcwd(), 'etc_cleaner'))

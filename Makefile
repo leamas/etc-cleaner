@@ -62,7 +62,7 @@ uninstall-home:
 	    $(HOME)/.local/share/etc-cleaner \
 	    $(HOME)/.local/share/applications/etc-cleaner.desktop \
 	    $(HOME)/.local/share/icons/hicolor/*/apps/etc-cleaner.png \
-	    $(HOME)/bin/etc-cleaner $(HOME)/bin/rpmconf-sudo-askpass
+	    $(HOME)/bin/etc-cleaner $(HOME)/bin/show-sudo-prompt
 	gtk-update-icon-cache -t ~/.local/share/icons/hicolor
 
 uninstall-local:
@@ -70,7 +70,7 @@ uninstall-local:
 	    /usr/local/share/etc-cleaner \
 	    /usr/local/share/applications/etc-cleaner.desktop \
 	    /usr/local/share/icons/hicolor/*/apps/etc-cleaner.png \
-	    /usr/local/bin/etc-cleaner /usr/local/bin/rpmconf-sudo-askpass
+	    /usr/local/bin/etc-cleaner /usr/local/bin/show-sudo-prompt
 	gtk-update-icon-cache -t /usr/local/share/icons/hicolor
 
 uninstall-usr:
@@ -78,6 +78,6 @@ uninstall-usr:
 	    /usr/share/etc-cleaner \
 	    /usr/share/applications/etc-cleaner.desktop \
 	    /usr/share/icons/hicolor/*/apps/etc-cleaner.png \
-	    /usr/bin/etc-cleaner /usr/bin/rpmconf-sudo-askpass
-	gtk-update-icon-cache -t /usr/share/icons/hicolor
+	    /usr/bin/etc-cleaner /usr/bin/show-sudo-prompt
+	gtk-update-icon-cache  /usr/share/icons/hicolor
 

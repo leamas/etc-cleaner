@@ -242,9 +242,15 @@ def rebuild_merge_window(change):
         grid.attach(align, 4, row, 1, 1)
         b.connect("clicked", on_merge_up_button_click, change)
 
-    def create_grid(change):
-        ''' Complete grid with oneline for each file variant. '''
+    def create_grid_align():
         grid = Gtk.Grid()
+        grid_align = builder.get_object("table_align")
+        grid_align.get_child().destroy()
+        grid_align.add(grid)
+        return grid_align
+
+    def update_grid(grid, change):
+        ''' Complete grid with oneline for each file variant. '''
         for i in range(0, 6):
             grid.insert_column(i)
         grid.set_column_spacing(10)
@@ -254,23 +260,19 @@ def rebuild_merge_window(change):
             grid.insert_row(row)
             add_header(grid, row, change)
             add_filename(grid, change.get_cached(row), row)
-            add_filedate(grid, change.get_cached(row), row,
-                         change.get_cached())
             if row or change.package == options.ORPHANED_OWNER:
                 add_delete_box(grid, row)
             if row and change.package != options.ORPHANED_OWNER:
                 add_up_button(grid, row, change)
+            add_filedate(grid, change.get_cached(row), row,
+                         change.get_cached())
         grid.row_count = len(change.files)
         grid.column_count = 6
-        grid_align = builder.get_object("table_align")
-        grid_align.get_child().destroy()
-        grid_align.add(grid)
-        return grid_align
 
     set_info_label(change)
     buttons_align = builder.get_object("merge_buttons_align")
     info_hbox = builder.get_object("merge_info_hbox")
-    grid_align = create_grid(change)
+    grid_align = create_grid_align()
     top_vbox = builder.get_object("merge_top_vbox")
 
     for child in top_vbox.get_children():
@@ -280,6 +282,7 @@ def rebuild_merge_window(change):
     top_vbox.pack_start(Gtk.HSeparator(), True, True, 10)
     top_vbox.pack_start(grid_align, True, True, 10)
     top_vbox.pack_start(buttons_align, True, True, 10)
+    update_grid(grid_align.get_child(), change)
 
     btn = builder.get_object("merge_merge_btn")
     reconnect(btn, "clicked", on_merge_merge_btn_clicked, change)
@@ -291,6 +294,7 @@ def rebuild_merge_window(change):
     reconnect(btn, "clicked", on_merge_ok_btn_clicked, change)
     w = builder.get_object('merge_window')
     w.set_title(options.profile.app + ': ' + change.basename)
+    #w.show_all()
     return w
 
 
@@ -411,7 +415,6 @@ def on_activate_link(label, href, _change_by_name):
     ''' Handle user clicking change link. '''
     _change_by_name[href].setup()
     w = rebuild_merge_window(_change_by_name[href])
-    # w.show_all()
     if _change_by_name[href].package == options.ORPHANED_OWNER:
         builder.get_object("merge_merge_btn").hide()
         builder.get_object("merge_diff_btn").hide()

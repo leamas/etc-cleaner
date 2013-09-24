@@ -1,14 +1,41 @@
 #!/usr/bin/env python
 ''' Run sudo command, possibly prompting for password.  '''
 
-import subprocess
+import os
 import sys
 
+from gi.repository import Gtk
 from subprocess import Popen, PIPE, CalledProcessError, check_output
 
+from . import prefix
 
-def _show_login_window(command, on_ok, builder):
+_MAX_RETRIES = 3
+
+
+def _show_login_window(command, on_ok, builder, retries):
     ''' Display login dialog, run on_ok() if password works. '''
+
+    def again_dialog():
+        ''' Show a wrong password, try again dialog. '''
+        msg = 'sudo authentication failed'
+        dialog = Gtk.MessageDialog(builder.get_object('main_window'),
+                                   Gtk.DialogFlags.DESTROY_WITH_PARENT
+                                       | Gtk.DialogFlags.MODAL,
+                                   Gtk.MessageType.WARNING,
+                                   Gtk.ButtonsType.OK,
+                                   'Sudo authentication failed')
+        dialog.run()
+        dialog.destroy()
+
+    def enough_dialog():
+        dialog = Gtk.MessageDialog(builder.get_object('main_window'),
+                                   Gtk.DialogFlags.DESTROY_WITH_PARENT
+                                       | Gtk.DialogFlags.MODAL,
+                                   Gtk.MessageType.ERROR,
+                                   Gtk.ButtonsType.OK,
+                                   'Too many login failures, giving up.')
+        dialog.run()
+        dialog.destroy()
 
     def cb_login_cancel(button):
         ''' Login cancel button: exit, nothing more to do.'''
@@ -31,18 +58,28 @@ def _show_login_window(command, on_ok, builder):
             on_ok(stdout)
             widget.get_toplevel().hide()
         else:
-            print "sudo failed, exiting"
-            sys.exit(2)
+            retries -= 1
+            if retries <= 0:
+                enough_dialog()
+                sys.exit(2)
+            else:
+                entry.set_text('')
+                again_dialog()
 
-    retries = 0
-    w = builder.get_object("login_window")
     builder.get_object('login_cancel_btn').connect('clicked',
                                                    cb_login_cancel)
     builder.get_object('login_ok_btn').connect('clicked', cb_login_ok)
     builder.get_object('login_entry').connect('activate', cb_login_ok)
-
+    w = builder.get_object("login_window")
     w.connect('delete-event', cb_login_delete_event)
+    header = builder.get_object('login_header')
+    if not header.get_text():
+        script = os.path.join(prefix.prefix_option.datadir,
+                              'show-sudo-prompt')
+        prompt = check_output('%s || true' % script, shell=True).strip()
+        header.set_text(prompt)
     w.show_all()
+
 
 def run_command(command, on_ok, builder):
     ''' Run command using sudo, invoke on_ok() with the stdout from
@@ -53,6 +90,7 @@ def run_command(command, on_ok, builder):
         paths = check_output(sudo)
         on_ok(paths)
     except CalledProcessError:
-        _show_login_window(command, on_ok, builder)
+        retries = _MAX_RETRIES
+        _show_login_window(command, on_ok, builder, retries)
 
 # vim: set expandtab ts=4 sw=4:
