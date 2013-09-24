@@ -18,10 +18,10 @@ all:
 install-home:
 	sed -i  '/^PATH/s|= .*|= "$(HOME)/.local/bin"|' etc-cleaner
 	sed -i  '/^PYTHONPATH/s|= .*|= "$(home_sitelib)"|' etc-cleaner
-	python ./setup.py --quiet install \
+	python ./setup.py  install \
 	    --prefix=$(HOME) \
 	    --install-lib=$(home_sitelib) \
-	    --install-scripts=bin \
+	    --install-scripts=$(HOME)/bin \
 	    --install-data=$(HOME)/.local/share
 	ln -sf ~/.local/share/etc-cleaner/ui.glade \
 	    $(home_sitelib)/etc_cleaner
