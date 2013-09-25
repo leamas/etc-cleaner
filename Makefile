@@ -76,3 +76,4 @@ uninstall-usr:
 	datadir=/usr/share                 \
 	bindir=/usr/bin                    \
 	$(MAKE) uninstall
+
