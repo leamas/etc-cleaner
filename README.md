@@ -23,7 +23,18 @@ Otherwise, three installation modes are supported using the Makefile:
 - make install-usr installs everything under /usr
 
 To uninstall use the corresponding  uninstall-home, uninstall-local and
-uninstall-usr targets
+uninstall-usr targets.
+
+In a normal installation, etc-cleaner runs together with an ugly terminal
+window. To avoid this, use the NO_TTYTICKETS option e. g.:
+```
+   NO_TTYTICKETS=1 make install-home
+
+Doing so will disable the tty_tickets option in sudoers, and with that
+the need for a terminal. However, this has security implications, se e. g.,
+https://tools.cisco.com/security/center/viewAlert.x?alertId=28444 and
+http://rixstep.com/2/20050521,00.shtml
+
 
 ## Status
 

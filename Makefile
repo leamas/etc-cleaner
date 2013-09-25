@@ -11,9 +11,13 @@ sitelib = python$(pythonvers)/site-packages
 home_sitelib = $(HOME)/.local/lib/$(sitelib)
 local_sitelib = /usr/local/lib/$(sitelib)
 usr_sitelib = /usr/lib/$(sitelib)
+home_datadir = $(HOME)/.local/share
 
 all:
 	@echo -e "$(help_msg)"
+
+no_tty_tickets:
+
 
 install-home:
 	python ./setup.py --quiet install \
@@ -29,6 +33,11 @@ install-home:
 	ln -sf ~/.local/share/etc-cleaner/plugins \
 	    $(home_sitelib)/etc_cleaner
 	gtk-update-icon-cache -t ~/.local/share/icons/hicolor
+	[ -n "$(NO_TTYTICKETS)" ] && { \
+	    sed -i '/Exec=/s/=.*/=etc-cleaner/' \
+	        $(home_datadir)/applications/etc-cleaner.desktop; \
+	    sudo cp etc-cleaner.sudo /etc/sudoers.d/etc-cleaner; \
+	}
 
 install-local:
 	python ./setup.py  --quiet install \
@@ -44,6 +53,11 @@ install-local:
 	ln -sf /usr/local/share/etc-cleaner/plugins \
 	    $(local_sitelib)/etc_cleaner
 	gtk-update-icon-cache -t /usr/local/share/icons/hicolor
+	[ -n "$(NO_TTYTICKETS)" ] && { \
+	    sed -i '/Exec=/s/=.*/=etc-cleaner'\
+	        /usr/local/share/etc-cleaner.desktop; \
+	     sudo cp etc-cleanup /etc/sudoers.d \
+	}
 
 install-usr:
 	python ./setup.py  --quiet install \
@@ -59,6 +73,11 @@ install-usr:
 	ln -sf /usr/share/etc-cleaner/plugins \
 	    $(usr_sitelib)/etc_cleaner
 	gtk-update-icon-cache /usr/share/icons/hicolor
+	[ -n "$(NO_TTYTICKETS)" ] && { \
+	    sed -i '/Exec=/s/=.*/=etc-cleaner' \
+	        /usr/share/etc-cleaner.desktop; \
+	     sudo cp etc-cleanup /etc/sudoers.d \
+	}
 
 uninstall-home:
 	rm -rf $(home_sitelib)/etc_cleaner* \
