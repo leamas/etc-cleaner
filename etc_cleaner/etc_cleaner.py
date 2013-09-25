@@ -2,7 +2,6 @@
 
 import os
 import os.path
-import shutil
 import subprocess
 import sys
 
@@ -14,6 +13,7 @@ from gi.repository import Gtk                    # pylint: disable=E0611
 from . import filechange
 from . import merge
 from . import options
+from . import prefs
 from . import prefix
 from . import prefs
 from . import run_sudo
