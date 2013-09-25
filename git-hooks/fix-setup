@@ -5,23 +5,16 @@
 cd $( dirname $( readlink -fn $0 ))/..
 ln -sf $PWD/git-hooks/pre-commit .git/hooks/pre-commit
 
-fgrep -q '/git-hooks/version-smudge' .git/config || {
-    cat << EOF >> .git/config
-
-# Added by fix-setup
-[filter "fix_version"]
-        smudge = $PWD/git-hooks/version-smudge
-        clean = $PWD/git-hooks/version-clean
-
-EOF
+git config --get merge.renormalize > /dev/null || {
+    git config --local merge.renormalize true
 }
-fgrep -q '/git-hooks/setup-smudge' .git/config || {
-    cat << EOF >> .git/config
 
-# Added by fix-setup
-[filter "fix_setup"]
-        smudge = $PWD/git-hooks/setup-smudge
-        clean = $PWD/git-hooks/setup-clean
+git config --get filter.fix_version.smudge > /dev/null || {
+    git config --local filter.fix_version.smudge $PWD/git-hooks/version-smudge
+    git config --local filter.fix_version.clean $PWD/git-hooks/version-clean
+}
 
-EOF
+git config --get filter.fix_setup.smudge > /dev/null || {
+    git config --local filter.fix_setup.smudge $PWD/git-hooks/setup-smudge
+    git config --local filter.fix_setup.clean $PWD/git-hooks/setup-clean
 }
