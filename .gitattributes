@@ -1,1 +1,2 @@
-*.glade  filter=fix_version
+ui.glade filter=fix_version
+setup.py filter=fix_setup

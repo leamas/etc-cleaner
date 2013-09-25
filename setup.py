@@ -17,7 +17,7 @@ def list_files_in_dir(dir_, extension):
 
 
 setup(name = "etc-cleaner",
-    version = "0",
+    version = "0-@commit@",
     description = "Support sysadm while maintaning config files",
     author = "Alec Leamas",
     author_email = "leamas@nowhere.net",

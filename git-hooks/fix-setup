@@ -15,3 +15,13 @@ fgrep -q '/git-hooks/version-smudge' .git/config || {
 
 EOF
 }
+fgrep -q '/git-hooks/setup-smudge' .git/config || {
+    cat << EOF >> .git/config
+
+# Added by fix-setup
+[filter "fix_setup"]
+        smudge = $PWD/git-hooks/setup-smudge
+        clean = $PWD/git-hooks/setup-clean
+
+EOF
+}

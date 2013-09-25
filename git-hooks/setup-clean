@@ -1,0 +1,6 @@
+#!/bin/bash
+#
+# version filter, can also be used with file argument.
+#
+
+sed -r ${1:+'-i'} -e "/version = /s/[0-9a-f]{7,8}/@commit@/" $1
