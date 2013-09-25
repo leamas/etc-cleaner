@@ -61,16 +61,24 @@ def save():
 
 def _fix_unavailable():
     ''' For unavailable options try to find an alternative. '''
-    for option, options_by_id in [(profile, profiles_by_id),
-                                  (merge_option, merge_options_by_id),
-                                  (diff_option, diff_options_by_id)]:
-        if not option.is_available:
-            for try_opt in options_by_id.itervalues():
-                if try_opt.is_available():
-                    option = try_opt
-                    break
-            else:
-                print "No available option!"
+    # pylint: disable=W0603
+    global diff_option
+    global merge_option
+    global profile
+
+    def get_available(option, options_by_id):
+        ''' Get first available option found unless option arg is ok. '''
+        if option.is_available():
+            return option
+        for try_opt in options_by_id.itervalues():
+            if try_opt.is_available():
+                return try_opt
+        print "No available option, using " + option.option_id
+        return option
+
+    diff_option = get_available(diff_option, diff_options_by_id)
+    merge_option = get_available(merge_option, merge_options_by_id)
+    profile = get_available(profile, profiles_by_id)
 
 
 def _restore():

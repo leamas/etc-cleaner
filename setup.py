@@ -7,6 +7,7 @@ import sys
 
 HERE = os.path.dirname(os.path.realpath(sys.argv[0]))
 
+
 def list_files_in_dir(dir_, extension):
     ''' Return recursive listing of all regular files under dir. '''
     file_list = []
