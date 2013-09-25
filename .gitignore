@@ -3,5 +3,6 @@
 *.pyo
 *.xcf
 MANIFEST
-dist
 build
+dist
+src
