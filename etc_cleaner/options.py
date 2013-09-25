@@ -58,6 +58,21 @@ def save():
         f.write('%s: %s\n' % ('diff_option', diff_option.option_id))
         f.write('%s: %s\n' % ('profile', profile.option_id))
 
+
+def _fix_unavailable():
+    ''' For unavailable options try to find an alternative. '''
+    for option, options_by_id in [(profile, profiles_by_id),
+                                  (merge_option, merge_options_by_id),
+                                  (diff_option, diff_options_by_id)]:
+        if not option.is_available:
+            for try_opt in options_by_id.itervalues():
+                if try_opt.is_available():
+                    option = try_opt
+                    break
+            else:
+                print "No available option!"
+
+
 def _restore():
     ''' Restore values from config file. '''
     # pylint: disable=W0603
@@ -130,6 +145,7 @@ def _load_plugins():
 
 _load_plugins()
 _restore()
+_fix_unavailable()
 
 
 # vim: set expandtab ts=4 sw=4:
