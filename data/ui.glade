@@ -210,7 +210,7 @@
     <property name="window_position">center-always</property>
     <property name="type_hint">dialog</property>
     <property name="program_name">etc-cleaner</property>
-    <property name="version">v0 e0e7325 2013-09-20</property>
+    <property name="version">v0 @commit@ @date@</property>
     <property name="copyright" translatable="yes">(c) 2013 Alec Leamas</property>
     <property name="license" translatable="yes">GPL</property>
     <property name="authors">Alec Leamas</property>
