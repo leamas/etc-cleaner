@@ -12,6 +12,7 @@ import Queue
 import multiprocessing
 import os
 import os.path
+import shutil
 import subprocess
 import sys
 
@@ -23,9 +24,10 @@ from gi.repository import GLib                   # pylint: disable=E0611
 from gi.repository.Pango import FontDescription  # pylint: disable=F0401,E0611
 
 from . import filechange
-from . import prefix
 from . import options
+from . import prefix
 from . import run_sudo
+from . import xdg_dirs
 
 profile = options.profile
 XdgDirs = xdg_dirs.XdgDirs
@@ -615,13 +617,13 @@ def on_merge_ok_btn_clicked(button, change):
             run_sudo.run_command(cmd, on_main_refresh_clicked, builder)
         button.get_toplevel().show_all()
 
-
     cached = change.get_cached()
     if not paths_equals(cached, change.basepath):
         cmd = ['cp', cached, change.basepath]
         run_sudo.run_command(cmd, do_when_cache_updated, builder)
     else:
         do_when_cache_updated()
+
 
 def on_merge_up_button_click(button, change):
     ''' The ^-button on row. Swap this row and row above. '''
@@ -755,6 +757,7 @@ def on_prefs_window_delete_event(window, event):
     prefix.save()
     window.hide()
     return True
+
 
 def show_main(change_by_name):
     ''' Display main window and start main loop. '''
