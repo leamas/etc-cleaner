@@ -46,6 +46,9 @@ class PrefixOption(AbstractOption):
     prefix = None
     mandir = None
 
+    def is_available(self):
+        raise NotImplementedError
+
 
 class UsrPrefixOption(PrefixOption):
     ''' /usr installation prefix. '''
