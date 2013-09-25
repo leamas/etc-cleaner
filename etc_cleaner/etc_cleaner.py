@@ -2,6 +2,7 @@
 
 import os
 import os.path
+import shutil
 import subprocess
 import sys
 
@@ -16,7 +17,6 @@ from . import options
 from . import prefix
 from . import prefs
 from . import run_sudo
-from . import xdg_dirs
 
 
 def _find_linked_file(file_):
