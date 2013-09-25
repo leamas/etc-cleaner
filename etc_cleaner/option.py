@@ -63,15 +63,23 @@ class ProfileOption(AbstractOption):
         '''
         raise NotImplementedError
 
+    def is_available(self):
+        raise NotImplementedError
+
 
 class MergeOption(AbstractOption):
     ''' A possible alternative when choosing merge command. '''
     cmd = None
+
+    def is_available(self):
+        raise NotImplementedError
 
 
 class DiffOption(AbstractOption):
     ''' A possible alternative when choosing merge command. '''
     cmd = None
 
+    def is_available(self):
+        raise NotImplementedError
 
 # vim: set expandtab ts=4 sw=4:

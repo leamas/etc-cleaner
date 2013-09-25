@@ -1,12 +1,4 @@
-#!/usr/bin/env python
-'''
-Support poor admin when trying to keep config files up-to-date.
-
-This is not a library. Nothing here is intended to be used by anything
-besides the etc-cleaner script. Importing this module starts an
-interactive process!
-
-'''
+''' Preferences window. '''
 
 from gi.repository import Gtk                    # pylint: disable=E0611
 

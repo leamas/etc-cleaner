@@ -5,7 +5,7 @@ import subprocess
 import os
 import sys
 
-from gi.repository import Gtk
+from gi.repository import Gtk                    # pylint: disable=E0611
 from subprocess import Popen, PIPE, CalledProcessError, check_output
 
 from . import prefix
@@ -18,7 +18,6 @@ def _show_login_window(command, on_ok, builder, retries):
 
     def again_dialog():
         ''' Show a wrong password, try again dialog. '''
-        msg = 'sudo authentication failed'
         dialog = Gtk.MessageDialog(builder.get_object('main_window'),
                                    Gtk.DialogFlags.DESTROY_WITH_PARENT
                                        | Gtk.DialogFlags.MODAL,
@@ -29,6 +28,7 @@ def _show_login_window(command, on_ok, builder, retries):
         dialog.destroy()
 
     def enough_dialog():
+        ''' Too many failed logins. '''
         dialog = Gtk.MessageDialog(builder.get_object('main_window'),
                                    Gtk.DialogFlags.DESTROY_WITH_PARENT
                                        | Gtk.DialogFlags.MODAL,
@@ -48,7 +48,7 @@ def _show_login_window(command, on_ok, builder, retries):
         print "Login window killed, exiting"
         sys.exit(2)
 
-    def cb_login_ok(widget):
+    def cb_login_ok(widget, retries):
         ''' Login OK button or CR in entry: run command using password. '''
         entry = builder.get_object('login_entry')
         my_cmd = ['sudo', '-S']
@@ -59,8 +59,8 @@ def _show_login_window(command, on_ok, builder, retries):
             on_ok(stdout)
             widget.get_toplevel().hide()
         else:
-            retries -= 1
-            if retries <= 0:
+            retries[0] -= 1
+            if retries[0] <= 0:
                 enough_dialog()
                 sys.exit(2)
             else:
@@ -70,7 +70,9 @@ def _show_login_window(command, on_ok, builder, retries):
     builder.get_object('login_cancel_btn').connect('clicked',
                                                    cb_login_cancel)
     builder.get_object('login_ok_btn').connect('clicked', cb_login_ok)
-    builder.get_object('login_entry').connect('activate', cb_login_ok)
+    builder.get_object('login_entry').connect('activate',
+                                               cb_login_ok,
+                                               retries)
     w = builder.get_object("login_window")
     w.connect('delete-event', cb_login_delete_event)
     header = builder.get_object('login_header')
@@ -91,7 +93,7 @@ def run_command(command, on_ok, builder):
         paths = check_output(sudo)
         on_ok(paths)
     except CalledProcessError:
-        retries = _MAX_RETRIES
+        retries = [_MAX_RETRIES]
         _show_login_window(command, on_ok, builder, retries)
 
 # vim: set expandtab ts=4 sw=4:
