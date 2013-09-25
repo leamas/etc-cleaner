@@ -17,8 +17,8 @@ There are no commandline options.
 import os.path
 import sys
 
-PATH = "/usr/local/bin"
-PYTHONPATH = "/usr/local/lib/python2.7/site-packages"
+PATH = os.path.dirname(os.path.realpath(sys.argv[0]))
+PYTHONPATH = os.path.dirname(os.path.realpath(sys.argv[0]))
 # These are patched by installation scripts.
 
 try:
