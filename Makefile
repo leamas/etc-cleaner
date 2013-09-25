@@ -16,13 +16,14 @@ all:
 	@echo -e "$(help_msg)"
 
 install-home:
-	sed -i  '/^PATH/s|= .*|= "$(HOME)/.local/bin"|' etc-cleaner
-	sed -i  '/^PYTHONPATH/s|= .*|= "$(home_sitelib)"|' etc-cleaner
 	python ./setup.py --quiet install \
 	    --prefix=$(HOME) \
 	    --install-lib=$(home_sitelib) \
-	    --install-scripts=bin \
+	    --install-scripts=$(HOME)/bin \
 	    --install-data=$(HOME)/.local/share
+	sed -i  -e '/^PATH/s|= .*|= "$(HOME)/bin"|' \
+	        -e   '/^PYTHONPATH/s|= .*|= "$(home_sitelib)"|' \
+	    $(HOME)/bin/etc-cleaner
 	ln -sf ~/.local/share/etc-cleaner/ui.glade \
 	    $(home_sitelib)/etc_cleaner
 	ln -sf ~/.local/share/etc-cleaner/plugins \
@@ -30,13 +31,14 @@ install-home:
 	gtk-update-icon-cache -t ~/.local/share/icons/hicolor
 
 install-local:
-	sed -i  '/^PATH/s|= .*|= "/usr/local/bin"|' etc-cleaner
-	sed -i  '/^PYTHONPATH/s|= .*|= "$(local_sitelib)"|' etc-cleaner
 	python ./setup.py  --quiet install \
 	    --prefix=/usr/local \
 	    --install-lib=$(local_sitelib) \
 	    --install-scripts=/usr/local/bin \
 	    --install-data=/usr/local/share
+	sed -i  -e '/^PATH/s|= .*|= "/usr/local/bin"|'  \
+	        -e '/^PYTHONPATH/s|= .*|= "$(local_sitelib)"|' \
+	    /usr/local/bin/etc-cleaner
 	ln -sf /usr/local/share/etc-cleaner/ui.glade \
 	    $(local_sitelib)/etc_cleaner
 	ln -sf /usr/local/share/etc-cleaner/plugins \
@@ -44,13 +46,14 @@ install-local:
 	gtk-update-icon-cache -t /usr/local/share/icons/hicolor
 
 install-usr:
-	sed -i  '/^PATH/s|= .*|= "/usr/bin"|' etc-cleaner
-	sed -i  '/^PYTHONPATH/s|= .*|= "$(usr_sitelib)"|' etc-cleaner
 	python ./setup.py  --quiet install \
 	    --prefix=/usr \
 	    --install-lib=$(usr_sitelib) \
 	    --install-scripts=/usr/bin \
 	    --install-data=/usr/share
+	sed -i  -e '/^PATH/s|= .*|= "/usr/bin"|' \
+	        -e '/^PYTHONPATH/s|= .*|= "$(usr_sitelib)"|' \
+	    /usr/bin/etc-cleaner
 	ln -sf /usr/share/etc-cleaner/ui.glade \
 	    $(usr_sitelib)/etc_cleaner
 	ln -sf /usr/share/etc-cleaner/plugins \
