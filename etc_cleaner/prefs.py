@@ -122,6 +122,7 @@ def on_prefs_ok_btn_clicked(button):
     ''' 'OK' button on preferences window. '''
     options.save()
     prefix.save()
+    button.get_toplevel().hide()
     return True
 
 
