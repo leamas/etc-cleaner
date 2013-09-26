@@ -1,4 +1,4 @@
-.TH "etc-cleaner" 1
+.TH "etc-cleaner" 8
 .SH NAME
 etc-cleaner \- Handle merging and clean-up of /etc config files.
 
@@ -25,15 +25,15 @@ here are defined in the plugins directory. User can extend the configuration
 options by adding new plugins. As of current, there are plugins which defines
 the diff command used, the merge command and the overall profile.
 .PP
-To create a new plugin using one of the existing as a template should be§
+To create a new plugin using one of the existing as a template should be
 reasonably easy even without python knowledge. Some hints:
-.IP \(bu 3
+.IP \(bu 4
 User defined plugins are installed in ~/.local/share/etc-cleaner/plugins or
 in /etc/etc-cleaner/plugins.
-.IP \(bu 3
+.IP \(bu 4
 The plugin class name must be unique. A plugin with the same class name as
 a system plugin will not be loaded.
-.IP \(bu 3
+.IP \(bu 4
 The option_id may or may not be unique. If not unique, the user plugin
 shadows the system one.
 .fi
@@ -62,7 +62,7 @@ $XDG_DATA_HOME/etc-cleaner/plugins if XDG_DATA_HOME is set. See FILES.
 
 .SH SEE ALSO
 .TP
-rpmconfig(1)
+rpmconf(8), rpm(8)
 CLI tool with similar scope.
 .TP
 https://github.com/leamas/etc-cleaner

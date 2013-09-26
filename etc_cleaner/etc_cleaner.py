@@ -19,12 +19,21 @@ from . import run_sudo
 from . import xdg_dirs
 
 
-def find_gladefile():
-    ''' Locate the ui file in current dir or datadir. '''
+def _find_gladefile():
+    ''' Locate the ui file in current dir. '''
     here = os.path.dirname(__file__)
     if os.path.exists(os.path.join(here, 'ui.glade')):
         return os.path.join(here, 'ui.glade')
     print("Installation error: Cannot find the ui.glade file")
+    sys.exit(2)
+
+
+def _find_linked_file(file_):
+    ''' Locate the file in current dir. '''
+    here = os.path.dirname(__file__)
+    if os.path.exists(os.path.join(here, file_)):
+        return os.path.join(here, file_)
+    print("Installation error: Cannot find: " + file_)
     sys.exit(2)
 
 
@@ -198,8 +207,9 @@ def on_about_item_activate(item):
 
 def on_manpage_item_activate(item):
     ''' Help| manpage menu item. Open manpage on desktop. '''
-    subprocess.call(['xdg-open', os.path.join(prefix.prefix_option.mandir,
-                                             'etc-cleaner.1')])
+    path = os.path.join(prefix.prefix_option.mandir,
+                        find_linked_file('etc-cleaner.8'))
+    subprocess.call(['xdg-open', path])
 
 
 def on_prefs_item_activate(item):
@@ -217,7 +227,7 @@ def show_main(change_by_name):
     main_window.show_all()
 
 builder = Gtk.Builder()
-builder.add_from_file(find_gladefile())
+builder.add_from_file(find_linked_file('ui.glade'))
 connect_signals()
 get_change_by_name(show_main)
 Gtk.main()

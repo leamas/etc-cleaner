@@ -21,8 +21,10 @@ install:
 	sed -i  -e '/^PATH/s|=.*|= "$(bindir)"|'                 \
 	        -e   '/^PYTHONPATH/s|=.*|= "$(python_sitelib)"|' \
 	    $(bindir)/etc-cleaner
+	install -pDm 644 etc-cleaner.8 $(datadir)/man/man8/etc-cleaner.8
 	ln -sf $(datadir)/etc-cleaner/ui.glade $(python_sitelib)/etc_cleaner
 	ln -sf $(datadir)/etc-cleaner/plugins  $(python_sitelib)/etc_cleaner
+	ln -sf $(datadir)/man/man8/etc-cleaner.8  $(python_sitelib)/etc_cleaner
 	gtk-update-icon-cache -t $(datadir)/icons/hicolor
 	[ -n "$(NO_TTYTICKETS)" ] && {                           \
 	    sed -i '/exec=/s/=.*/=etc-cleaner/'                  \
@@ -33,6 +35,7 @@ install:
 uninstall:
 	rm -rf $(python_sitelib)/etc_cleaner*               \
 	    $(datadir)/etc-cleaner                          \
+	    $(datadir)/man/man8/etc-cleaner.8               \
 	    $(datadir)/applications/etc-cleaner.desktop     \
 	    $(datadir)/icons/hicolor/*/apps/etc-cleaner.png \
 	    $(bindir)etc-cleaner $(bindir)rpmconf-sudo-askpass
