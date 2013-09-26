@@ -47,6 +47,7 @@ install-home:
 	datadir=$(HOME)/.local/share                 \
 	bindir=$(HOME)/bin                           \
 	$(MAKE) install
+	mkdir -p $(HOME)/.config/etc-cleaner/plugins
 
 install-local:
 	prefix=$(DESTDIR)/usr/local                        \
@@ -61,6 +62,7 @@ install-usr:
 	datadir=$(DESTDIR)/usr/share                 \
 	bindir=$(DESTDIR)/usr/bin                    \
 	$(MAKE) install
+	mkdir -p /etc/etc-cleaner/plugins
 
 uninstall-home:
 	python_sitelib=$(HOME)/.local/lib/$(sitelib) \
