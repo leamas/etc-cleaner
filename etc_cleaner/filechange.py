@@ -65,7 +65,7 @@ class FileChange(object):
                 self.files[ix] = tmp
                 break
         else:
-            print "Cannot shuffle (not found): " + path
+            print("Cannot shuffle (not found): " + path)
 
     def get_cached(self, index=0):
         ''' Return full path to cached copy of a files item. '''

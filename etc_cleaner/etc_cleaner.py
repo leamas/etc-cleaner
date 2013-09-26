@@ -23,7 +23,7 @@ def find_gladefile():
     here = os.path.dirname(__file__)
     if os.path.exists(os.path.join(here, 'ui.glade')):
         return os.path.join(here, 'ui.glade')
-    print "Installation error: Cannot find the ui.glade file"
+    print("Installation error: Cannot find the ui.glade file")
     sys.exit(2)
 
 

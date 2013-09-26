@@ -73,7 +73,7 @@ def _fix_unavailable():
         for try_opt in options_by_id.itervalues():
             if try_opt.is_available():
                 return try_opt
-        print "No available option, using " + option.option_id
+        print("No available option, using " + option.option_id)
         return option
 
     diff_option = get_available(diff_option, diff_options_by_id)
@@ -114,9 +114,9 @@ def _restore():
                 elif key == 'profile':
                     profile = profiles_by_id[value]
                 else:
-                    print "Bad config  key: " + key
+                    print("Bad config  key: " + key)
             except IndexError:
-                print "Bad config value: " + value
+                print("Bad config value: " + value)
 
 
 def _load_dir(dir_):
@@ -148,7 +148,7 @@ def _load_plugins():
     _load_dir(os.path.join(SITEDIR, 'plugins'))
     _load_dir(os.path.join(XdgDirs.app_datadir, 'plugins'))
     if not profiles_by_id:
-        print "Configuration error: no plugins found"
+        print("Configuration error: no plugins found")
         sys.exit(2)
 
 _load_plugins()
