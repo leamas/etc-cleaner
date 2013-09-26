@@ -64,8 +64,8 @@ few cave-eats:
 - The option_id could be unique or not. If not unique, your plugin will
   shadow the system one.
 
-## rpm-config notes.
-This package is inspired by rpm-config. However, here are also some
+## rpmconf notes.
+This package is inspired by rpmconf. However, here are also some
 changes:
   - This is obviously a GUI app.
   - External merge tools are not run as root. Merging is done on

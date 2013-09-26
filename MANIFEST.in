@@ -1,2 +1,3 @@
 include etc-cleaner etc-cleaner.desktop README.md show-sudo-prompt
+include etc-cleaner.8
 recursive-include data *.glade *.png
