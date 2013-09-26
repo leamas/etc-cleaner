@@ -1,6 +1,11 @@
 ''' Main windows and setup. '''
+# pylint: disable=redefined-outer-name
 
-import Queue
+import sys
+if sys.version_info[0] >= 3:
+    import queue as Queue               # pylint: disable=import-error
+else:
+    import Queue                        # pylint: disable=unused-import
 import multiprocessing
 import os
 import os.path
@@ -241,7 +246,7 @@ def rebuild_window(change, builder, refresh_func):
         GLib.timeout_add(500, timer_check)
         p = multiprocessing.Process(target = run_merge, args = (cmd, queue))
         p.start()
-        #builder.get_object('merge_window').hide()
+-       # builder.get_object('merge_window').hide()
         button.get_toplevel().hide()
         return True
 
