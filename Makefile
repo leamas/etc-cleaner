@@ -64,7 +64,7 @@ install-usr:
 	datadir=$(DESTDIR)/usr/share                 \
 	bindir=$(DESTDIR)/usr/bin                    \
 	$(MAKE) install
-	mkdir -p /etc/etc-cleaner/plugins
+	mkdir -p $(DESTDIR)/etc/etc-cleaner/plugins
 
 install-src:
 	ln -sf $(PWD)/data/ui.glade etc_cleaner
