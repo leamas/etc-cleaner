@@ -77,12 +77,12 @@ def get_labels(_change_by_name):
         return label
 
     labels = []
-    pkgs = list(set([c.package for c in _change_by_name.itervalues()]))
+    pkgs = list(set([c.package for c in _change_by_name.values()]))
     for pkg in pkgs:
         label = get_label(pkg)
         labels.append(label)
         changes = \
-            [c for c in _change_by_name.itervalues() if c.package == pkg]
+            [c for c in _change_by_name.values() if c.package == pkg]
         for c in changes:
             markup = options.LABEL_LINK % (str(c), c.basename)
             label = get_label(markup, 40)
@@ -117,7 +117,7 @@ def get_main_window(builder, _change_by_name):      # pylint: disable=W0621
     if not labels:
         return all_done_window()
 
-    orphaned = [c for c in _change_by_name.itervalues()
+    orphaned = [c for c in _change_by_name.values()
                     if c.package == options.ORPHANED_OWNER]
     heading_label = builder.get_object("main_heading_lbl")
     txt = '%d files to merge, %d orphaned config files' % \
