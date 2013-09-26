@@ -46,8 +46,9 @@ def get_change_by_name(do_when_done):
                 configpath = configpath.replace(suffix, '')
             files = glob(configpath + '*')
             try:
-                pkg_nvr = check_output(['rpm', '-qf', configpath],
+                bytes_ = check_output(['rpm', '-qf', configpath],
                                          stderr=open('/dev/null', 'w')).strip()
+                pkg_nvr = bytes_.decode(encoding='utf-8')
                 pkg = pkg_nvr.rsplit('-', 2)[0]
             except subprocess.CalledProcessError:
                 pkg = options.ORPHANED_OWNER

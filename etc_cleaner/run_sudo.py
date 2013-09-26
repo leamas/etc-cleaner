@@ -54,7 +54,8 @@ def _show_login_window(command, on_ok, builder, retries):
         my_cmd = ['sudo', '-S']
         my_cmd.extend(command)
         popen = Popen(my_cmd, stdin=PIPE, stdout=PIPE)
-        stdout = popen.communicate(entry.get_text().strip() + '\n')[0]
+        pwbytes = (entry.get_text().strip() + '\n').encode(encoding='utf-8')
+        stdout = popen.communicate(pwbytes)[0].decode(encoding='utf-8')
         if popen.returncode == 0:
             on_ok(stdout)
             widget.get_toplevel().hide()
@@ -80,7 +81,7 @@ def _show_login_window(command, on_ok, builder, retries):
         script = os.path.join(prefix.prefix_option.datadir,
                               'show-sudo-prompt')
         prompt = check_output('%s || true' % script, shell=True).strip()
-        header.set_text(prompt)
+        header.set_text(prompt.decode(encoding='utf-8'))
     w.show_all()
 
 
@@ -91,7 +92,7 @@ def run_command(command, on_ok, builder):
     sudo = ['sudo', '-n'] + command
     try:
         paths = check_output(sudo)
-        on_ok(paths)
+        on_ok(paths.decode(encoding='utf-8'))
     except CalledProcessError:
         retries = [_MAX_RETRIES]
         _show_login_window(command, on_ok, builder, retries)
