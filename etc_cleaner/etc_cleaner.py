@@ -13,7 +13,6 @@ from gi.repository import Gtk                    # pylint: disable=E0611
 from . import filechange
 from . import merge
 from . import options
-from . import prefs
 from . import prefix
 from . import prefs
 from . import run_sudo
@@ -99,6 +98,7 @@ def connect_signals():
         "onDeleteWindow": Gtk.main_quit,
         "on_main_quit_clicked": Gtk.main_quit,
         "on_main_refresh_clicked": on_main_refresh_clicked,
+        "on_all_done_ok_clicked": Gtk.main_quit,
         "on_refresh_item_activate": on_refresh_item_activate,
         "on_quit_item_activate": Gtk.main_quit,
         "on_about_item_activate": on_about_item_activate,
