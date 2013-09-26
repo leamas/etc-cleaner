@@ -1,5 +1,5 @@
 ''' Abstract option definitions.  '''
-# pylint: disable=W0105,R0201,W0613
+# pylint: disable=W0105,R0201,W0613,R0921
 
 from subprocess import check_output, call
 
@@ -16,7 +16,7 @@ class AbstractOption(object):
 
     def is_available(self):
         ''' Return true if command tool is installed. '''
-        raise NotImplementedError
+        assert False, "Calling abstract AbstractOption.is_available()"
 
     def is_visible(self):
         ''' Return True if option is available on this platorm.'''
@@ -61,25 +61,17 @@ class ProfileOption(AbstractOption):
         Returns:
            - Name of package owning path, or None.
         '''
-        raise NotImplementedError
-
-    def is_available(self):
-        raise NotImplementedError
+        assert False, "Calling abstract ProfileOption.get_owner()"
 
 
 class MergeOption(AbstractOption):
     ''' A possible alternative when choosing merge command. '''
     cmd = None
 
-    def is_available(self):
-        raise NotImplementedError
-
 
 class DiffOption(AbstractOption):
     ''' A possible alternative when choosing merge command. '''
     cmd = None
 
-    def is_available(self):
-        raise NotImplementedError
 
 # vim: set expandtab ts=4 sw=4:
