@@ -40,12 +40,12 @@ def _show_login_window(command, on_ok, builder, retries):
 
     def cb_login_cancel(button):
         ''' Login cancel button: exit, nothing more to do.'''
-        print "Login cancelled, exiting"
+        print("Login cancelled, exiting")
         sys.exit(2)
 
     def cb_login_delete_event(window, event):
         ''' Login window deleted: exit, nothing more to do.'''
-        print "Login window killed, exiting"
+        print("Login window killed, exiting")
         sys.exit(2)
 
     def cb_login_ok(widget, retries):

@@ -37,7 +37,7 @@ def _restore():
             prefix_id = f.read().split(':')[1].strip()
         prefix_option = prefix_options_by_id[prefix_id]
     except (OSError, IOError, IndexError, KeyError) as e:
-        print "Cannot read prefix: (ignored) " + str(e)
+        print("Cannot read prefix: (ignored) " + str(e))
         prefix_option = _get_default()
 
 

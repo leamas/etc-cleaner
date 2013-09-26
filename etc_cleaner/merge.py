@@ -282,13 +282,13 @@ def rebuild_window(change, builder, refresh_func):
                 basename = grid.get_child_at(1, row).get_text()
                 break
         else:
-            print "Cannot find button file"
+            print("Cannot find button file")
         found = [f for f in change.files if f.endswith(basename)]
         if found:
             change.shuffle_up(found[0])
             rebuild_window(change, builder, refresh_func)
         else:
-            print "No match for button basename: " + basename
+            print("No match for button basename: " + basename)
         w = builder.get_object('merge_window')
         w.show_all()
 
