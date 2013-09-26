@@ -42,7 +42,7 @@ for the personal install in $HOME)
 
 ## Status
 
-This is as yet in the "don't even try me" status.
+This is in the "works occasionally for me" status. That's not even alpha...
 
 ## Running
 For the source version
@@ -50,6 +50,8 @@ For the source version
     $ make install-src
     $ ./etc-cleaner
 ```
+In the other installation modes just invke etc-cleaner or use the desktop to
+start it.
 ## Extending
 
 The preferences window is basically dead simple, presenting a few precanned
