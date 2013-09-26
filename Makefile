@@ -78,6 +78,11 @@ install-src:
 	ln -sf $(PWD)/plugins  etc_cleaner
 	ln -sf $(PWD)/etc-cleaner.8  etc_cleaner
 
+install-src:
+	ln -sf $(PWD)/data/ui.glade etc_cleaner
+	ln -sf $(PWD)/plugins  etc_cleaner
+	ln -sf $(PWD)/etc-cleaner.8  etc_cleaner
+
 uninstall-home:
 	python_sitelib=$(HOME)/.local/lib/$(sitelib) \
 	datadir=$(HOME)/.local/share                 \
