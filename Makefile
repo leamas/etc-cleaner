@@ -1,8 +1,10 @@
 help_msg = \
 Plain 'make' doesn't do anything. Targets: \n\
-  - install-home: Personal user install. \n\
-  - install-usr:  Install in /usr (as root). \n\
-  - install-local:  Install in /usr/local (as root).
+  - install-home:   Personal user install. \n\
+  - install-usr:    Install in /usr (as root). \n\
+  - install-local:  Install in /usr/local (as root). \n\
+  - install-src:    Patch installation after unpacking dist tarball. \n\
+  - dist:           Create tarball in dist/
 
 pythonvers = $(shell python -c "import distutils; \
     print distutils.__version__.rsplit('.',1)[0]")
@@ -64,6 +66,11 @@ install-usr:
 	$(MAKE) install
 	mkdir -p /etc/etc-cleaner/plugins
 
+install-src:
+	ln -sf $(PWD)/data/ui.glade etc_cleaner
+	ln -sf $(PWD)/plugins  etc_cleaner
+	ln -sf $(PWD)/etc-cleaner.8  etc_cleaner
+
 uninstall-home:
 	python_sitelib=$(HOME)/.local/lib/$(sitelib) \
 	datadir=$(HOME)/.local/share                 \
@@ -82,3 +89,9 @@ uninstall-usr:
 	bindir=/usr/bin                    \
 	$(MAKE) uninstall
 
+dist: .PHONY
+	mv -f setup.py setup.py.OLD
+	git checkout setup.py
+	python ./setup.py sdist
+
+.PHONY:
