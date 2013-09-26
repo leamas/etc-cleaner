@@ -13,6 +13,7 @@ class RpmProfileOption(ProfileOption):
     available_msg = 'Use rpm-based default configuration.'
     backup_suffix = '.rpmsave'
     pending_suffix = '.rpmnew'
+    replaced_suffix = '.rpmorig'
 
     def get_owner(self, path):
         try:

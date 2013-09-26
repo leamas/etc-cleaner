@@ -13,6 +13,7 @@ class DpkgProfileOption(ProfileOption):
     available_msg = 'Use dpkg-based configuration.'
     backup_suffix = '.dpkg-old'
     pending_suffix = '.dpkg-dist'
+    replaced_suffix = 'dfjafkd@%'
 
     def get_owner(self, path):
         try:
