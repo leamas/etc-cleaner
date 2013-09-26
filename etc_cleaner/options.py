@@ -70,7 +70,7 @@ def _fix_unavailable():
         ''' Get first available option found unless option arg is ok. '''
         if option.is_available():
             return option
-        for try_opt in options_by_id.itervalues():
+        for try_opt in options_by_id.values():
             if try_opt.is_available():
                 return try_opt
         print("No available option, using " + option.option_id)
