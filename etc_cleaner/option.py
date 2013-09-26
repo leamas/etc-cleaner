@@ -52,7 +52,8 @@ class ProfileOption(AbstractOption):
 
     def cs(self, path):
         ''' Return a checksum for file at path. '''
-        return check_output(['md5sum', path]).split()[0].strip()
+        bytes_ = check_output(['md5sum', path])
+        return bytes_.decode(encoding='utf-8').split()[0].strip()
 
     def get_owner(self, path):
         ''' Return package owning the given path.

@@ -17,7 +17,8 @@ class RpmProfileOption(ProfileOption):
     def get_owner(self, path):
         try:
             with open('/dev/null', 'w') as null:
-                nvr = check_output(['rpm', '-qf', path], stderr=null)
+                bytes_ = check_output(['rpm', '-qf', path], stderr=null)
+                nvr = bytes_.decode(encoding='utf-8')
         except CalledProcessError:
             return None
         else:

@@ -184,7 +184,7 @@ def rebuild_window(change, builder, refresh_func):
         path1 = change.get_cached(1)
         cmd = options.diff_option.cmd % {'path0': path0, 'path1': path1}
         try:
-            diff = check_output(cmd.split())
+            diff = check_output(cmd.split()).decode(encoding='utf-8')
         except subprocess.CalledProcessError as e:
             diff = e.output
         if len(diff) > options.profile.max_viewsize:
@@ -215,7 +215,8 @@ def rebuild_window(change, builder, refresh_func):
 
         def cs(path):
             ''' Return a checksum for file at path. '''
-            return check_output(['md5sum', path]).split()[0].strip()
+            bytes_ = check_output(['md5sum', path])
+            return bytes_.decode(encoding='utf-8').split()[0].strip()
 
         def timer_check():
             ''' Check if merge has completed, refresh if so. '''

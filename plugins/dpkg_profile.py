@@ -17,7 +17,8 @@ class DpkgProfileOption(ProfileOption):
     def get_owner(self, path):
         try:
             with open('/dev/null', 'w') as null:
-                name = check_output(['dpkg', '-S', path], stderr=null)
+                bytes_ = check_output(['dpkg', '-S', path], stderr=null)
+                name = bytes_.decode(encoding='utf-8')
         except CalledProcessError:
             return None
         else:
