@@ -105,7 +105,6 @@ def connect_signals():
         "onDeleteWindow": Gtk.main_quit,
         "on_main_quit_clicked": Gtk.main_quit,
         "on_main_refresh_clicked": on_main_refresh_clicked,
-        "on_all_done_ok_clicked": Gtk.main_quit,
         "on_refresh_item_activate": on_refresh_item_activate,
         "on_quit_item_activate": Gtk.main_quit,
         "on_about_item_activate": on_about_item_activate,
@@ -121,9 +120,10 @@ def connect_signals():
 def get_main_window(builder, _change_by_name):      # pylint: disable=W0621
     ''' Build the main window with links to each change. '''
 
+    w = builder.get_object("Main")
     labels = get_labels(_change_by_name)
     if not labels:
-        return all_done_window()
+        all_done_dialog(w)
 
     orphaned = [c for c in _change_by_name.values()
                     if c.package == options.ORPHANED_OWNER]
@@ -137,20 +137,21 @@ def get_main_window(builder, _change_by_name):      # pylint: disable=W0621
         child.destroy()
     for l in labels:
         vbox.pack_start(l, True, True, 0)
-    w = builder.get_object("Main")
     w.connect("delete-event", Gtk.main_quit)
     return w
 
 
-def all_done_window():
-    ''' Simple "No changes detected" dialog. '''
-    w = builder.get_object("all_done_dialog")
-    handlers = {
-        "onDeleteWindow": Gtk.main_quit,
-        "on_all_done_ok_clicked": Gtk.main_quit,
-    }
-    builder.connect_signals(handlers)
-    return w
+def all_done_dialog(main_window):      # pylint: disable=W0621
+    ''' Simple "All done" info dialog. '''
+    msg = 'No unmerged changes found'
+    dialog = Gtk.MessageDialog(main_window,
+                               Gtk.DialogFlags.DESTROY_WITH_PARENT
+                                   | Gtk.DialogFlags.MODAL,
+                               Gtk.MessageType.INFO,
+                               Gtk.ButtonsType.OK,
+                               msg)
+    dialog.run()
+    dialog.destroy()
 
 
 #
