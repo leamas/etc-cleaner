@@ -19,7 +19,12 @@ MSG_UPDATED = '''File %(basename)s in %(dir)s has been updated by package
 %(pkg)s, leaving a backup in %(saved)s.'''
 
 MSG_PENDING = '''Package %(pkg)s has installed a new version of %(basename)s
-called %(update)s in %(dir)s. %(basename)s has not been changed.'''
+called %(update)s in %(dir)s. %(basename)s which probably contains local
+modifications has not been changed.'''
+
+MSG_REPLACED = '''Package %(pkg)s has installed a new version of
+%(basename)s, saving a previous version in %(orig)s. The previous version
+did not belong to any package. '''
 
 MSG_ORPHANED = '''Packages have been removed leaving stale configuration
 files in %(dir)s.'''

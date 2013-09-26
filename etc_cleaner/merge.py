@@ -66,6 +66,11 @@ def _set_info_label(change, builder):
                                      'dir': change.dirname,
                                      'pkg': change.package,
                                      'update': change.update}
+    elif change.replaced:
+        msg = options.MSG_REPLACED % {'basename': change.basename,
+                                      'dir': change.dirname,
+                                      'pkg': change.package,
+                                      'orig': change.replaced}
     else:
         msg = 'What?!'
     label = builder.get_object("merge_label")

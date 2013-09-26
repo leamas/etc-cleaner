@@ -16,7 +16,17 @@ XdgDirs = xdg_dirs.XdgDirs
 
 
 class FileChange(object):
-    ''' A changed configuration file. '''
+    ''' A changed configuration file. Maintains a list of files with
+    a common basename and different extension as created by package
+    managers.
+    rpm specifics:
+      - rpmorig: file existed but was not owned by any package, saved
+        in .rpmorig
+      - .rpmnew: Existing file had local modifications, new file was
+        installed as .rpmnew without touching original file.
+      - .rpmsave: reflects a %config. The original filewas replaced by
+        the new and saved in .rpmsave
+    '''
     # pylint: disable=W0108
 
     def __init__(self, pkg_name, paths, builder):
@@ -25,6 +35,7 @@ class FileChange(object):
         self.files = [f for f in self.files if os.path.isfile(f)]
         self.basepath = paths[0].replace(profile.backup_suffix, '')
         self.basepath = self.basepath.replace(profile.pending_suffix, '')
+        self.basepath = self.basepath.replace(profile.replaced_suffix, '')
         self.basename = os.path.basename(self.basepath)
         self.dirname = os.path.dirname(self.basepath)
         self.builder = builder
@@ -91,6 +102,8 @@ class FileChange(object):
 
     backup = property(lambda self: self.find_suffix(profile.backup_suffix))
     update = property(lambda self: self.find_suffix(profile.pending_suffix))
+    replaced = \
+        property(lambda self: self.find_suffix(profile.replaced_suffix))
 
 
 # vim: set expandtab ts=4 sw=4:

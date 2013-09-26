@@ -68,8 +68,10 @@ def get_change_by_name(do_when_done):
                 change_by_name[str(change)] = change
         do_when_done(change_by_name)
 
-    suffixes = (options.profile.pending_suffix, options.profile.backup_suffix)
-    cmd = 'find /etc ( -name *%s -o -name *%s )' % suffixes
+    suffixes = (options.profile.pending_suffix,
+                options.profile.backup_suffix,
+                options.profile.replaced_suffix)
+    cmd = 'find /etc ( -name *%s -o -name *%s -o -name *%s )' % suffixes
     run_sudo.run_command(cmd.split(), process_paths, builder)
 
 
