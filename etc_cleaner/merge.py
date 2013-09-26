@@ -252,7 +252,6 @@ def rebuild_window(change, builder, refresh_func):
         GLib.timeout_add(500, timer_check)
         p = multiprocessing.Process(target = run_merge, args = (cmd, queue))
         p.start()
--       # builder.get_object('merge_window').hide()
         button.get_toplevel().hide()
         return True
 
@@ -276,7 +275,7 @@ def rebuild_window(change, builder, refresh_func):
                 cmd = ['rm']
                 cmd.extend(to_remove)
                 run_sudo.run_command(cmd, refresh_func, builder)
-            button.get_toplevel().show_all()
+            button.get_toplevel().hide()
 
         cached = change.get_cached()
         if not _paths_equals(cached, change.basepath):
