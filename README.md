@@ -13,8 +13,8 @@ clear in the screenshots directory.
 
 ## Installation
 To test, no installation is needed - the app can be run straight from
-the source tree checked out from git. However, there is then no desktop
-inegration.
+the source tree checked out from git after running "make install-src".
+However, there is then no desktop integration.
 
 Otherwise, three installation modes are supported using the Makefile:
 - make install-home installs everything under ~/.local with a binary
@@ -47,7 +47,7 @@ This is as yet in the "don't even try me" status.
 ## Running
 For the source version
 ```
-    $ export PATH=$PWD:$PATH
+    $ make install-src
     $ ./etc-cleaner
 ```
 ## Extending
