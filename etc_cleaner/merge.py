@@ -214,7 +214,7 @@ def rebuild_window(change, builder, refresh_func):
         ''' Merge button on merge window. Invoke external
         merge tool, rescan status when done.
         Parallell stuff: merge runs in a separate process. When
-        done sends a message to the queue. In othe rend the queue
+        done sends a message to the queue. In other end the queue
         is polled and acted upon when the message arrives.
         '''
 

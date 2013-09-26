@@ -1,4 +1,4 @@
-''' Main windows and setup. '''
+''' Main window and main loop. '''
 
 import os
 import os.path
@@ -17,15 +17,6 @@ from . import prefix
 from . import prefs
 from . import run_sudo
 from . import xdg_dirs
-
-
-def _find_gladefile():
-    ''' Locate the ui file in current dir. '''
-    here = os.path.dirname(__file__)
-    if os.path.exists(os.path.join(here, 'ui.glade')):
-        return os.path.join(here, 'ui.glade')
-    print("Installation error: Cannot find the ui.glade file")
-    sys.exit(2)
 
 
 def _find_linked_file(file_):
@@ -48,7 +39,7 @@ def get_change_by_name(do_when_done):
         '''
         if not isinstance(paths, list):
             paths = paths.split('\n')
-        change_by_name = {}       # pylint: disable=W0621
+        change_by_name = {}       # pylint: disable=redefined-outer-name
         for path in [p for p in paths if p]:
             configpath = path
             for suffix in suffixes:
@@ -117,9 +108,6 @@ def connect_signals():
     builder.connect_signals(handlers)
 
 
-#
-# Windows
-#
 def get_main_window(builder, _change_by_name):      # pylint: disable=W0621
     ''' Build the main window with links to each change. '''
 
@@ -144,7 +132,7 @@ def get_main_window(builder, _change_by_name):      # pylint: disable=W0621
     return w
 
 
-def all_done_dialog(main_window):      # pylint: disable=W0621
+def all_done_dialog(main_window):    # pylint: disable=redefined-outer-name
     ''' Simple "All done" info dialog. '''
     msg = 'No unmerged changes found'
     dialog = Gtk.MessageDialog(main_window,
@@ -159,7 +147,7 @@ def all_done_dialog(main_window):      # pylint: disable=W0621
 
 #
 # Callbacks
-# pylint: disable=W0613
+# pylint: disable=unused-argument
 #
 def on_activate_link(label, href, _change_by_name):
     ''' Handle user clicking change link. '''
@@ -176,12 +164,6 @@ def on_activate_link(label, href, _change_by_name):
 def on_window_delete_event(window, event):
     ''' generic window close event. '''
     window.hide()
-    return True
-
-
-def on_view_ok_btn_clicked(button, change):
-    ''' OK button on view_some_text window. '''
-    button.get_toplevel().hide()
     return True
 
 
@@ -216,16 +198,13 @@ def on_manpage_item_activate(item):
 
 
 def on_prefs_item_activate(item):
-    ''' Edit|Peferences menu item: TBD. '''
+    ''' Edit|Peferences menu item: start the prefs window. '''
     w = prefs.rebuild_window(builder)
-    w.connect('delete-event', lambda w, e: w.hide())
-    b = builder.get_object('prefs_ok_btn')
-    b.connect('clicked', lambda item: item.get_toplevel().hide())
     w.show_all()
 
 
 def show_main(change_by_name):
-    ''' Display main window and start main loop. '''
+    ''' Display main window. '''
     main_window = get_main_window(builder, change_by_name)
     main_window.show_all()
 
