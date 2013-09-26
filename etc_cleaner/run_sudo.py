@@ -69,7 +69,9 @@ def _show_login_window(command, on_ok, builder, retries):
 
     builder.get_object('login_cancel_btn').connect('clicked',
                                                    cb_login_cancel)
-    builder.get_object('login_ok_btn').connect('clicked', cb_login_ok)
+    builder.get_object('login_ok_btn').connect('clicked',
+                                               cb_login_ok,
+                                               retries)
     builder.get_object('login_entry').connect('activate',
                                                cb_login_ok,
                                                retries)
