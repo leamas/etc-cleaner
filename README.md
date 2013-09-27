@@ -11,49 +11,60 @@ change there is a window where you can select which variant to use, view it,
 merge it or just show the diff. There are some screenshots making it more
 clear in the screenshots directory.
 
-## Installation
-To test, no installation is needed - the app can be run straight from
-the source tree checked out from git after running "make install-src".
-However, there is then no desktop integration.
+## Status
+This is in the "works occasionally for me" status. That's not even alpha...
+
+## Download
+Either use git:
+```
+    $ git clone  https://github.com/leamas/etc-cleaner
+    $ cd etc_cleaner
+```
+or download a tarball and use that:
+```
+    $ wget https://github.com/leamas/etc-cleaner/tarball/master/etc-cleaner.tar.gz
+    $ tar xzf etc-cleaner.tar.gz
+    $ cd leamas-etc-cleaner-*
+```
+
+## Setup
+To test, no setup is needed - the app can be run straight from
+the git source tree.  However, there is then no desktop integration.
 
 Otherwise, three installation modes are supported using the Makefile:
-- make install-home installs everything under ~/.local with a binary
-  in ~/bin. No root required.
-- make install-local installs everything under /usr/local
-- make install-usr installs everything under /usr
+```
+$ make help
+Plain 'make' doesn't do anything. Targets:
+ - install-home:   Personal user install in ~/.local/share and ~/bin.
+ - install-usr:    Install in /usr (as root).
+ - install-local:  Install in /usr/local (as root).
+ - dist:           Create tarball in dist/.
+ - install-src:    Patch installation after unpacking dist tarball.
+ - uninstall-home, uninstall-local, uninstall-usr: Remove installations.
 
-To uninstall there are the corresponding  uninstall-home, uninstall-local
-and uninstall-usr targets.
-
-In a normal installation, etc-cleaner runs together with an ugly terminal
+ Variables:
+ DESTDIR: For install-usr, relocate installation to DESTDIR/usr.
+ NO_TTYTICKETS: Disable tty_tickets in sudoers and get rid of ugly terminal.
+```
+In a default installation, etc-cleaner runs together with an ugly terminal
 window. To avoid this, use the NO_TTYTICKETS option e. g.,
 ```
    NO_TTYTICKETS=1 make install-home
-
 ```
 Doing so will disable the tty_tickets option in sudoers, and with that
 the need for a terminal. However, this has security implications, se e. g.,
 https://tools.cisco.com/security/center/viewAlert.x?alertId=28444 and
 http://rixstep.com/2/20050521,00.shtml
 
-For packaging, make supports the usual DESTDIR=... syntax (although not
-for the personal install in $HOME)
-
-
-## Status
-
-This is in the "works occasionally for me" status. That's not even alpha...
-
 ## Running
 For the source version
 ```
-    $ make install-src
     $ ./etc-cleaner
 ```
-In the other installation modes just invke etc-cleaner or use the desktop to
+In the other installation modes just invoke etc-cleaner or use the desktop to
 start it.
-## Extending
 
+## Extending
 The preferences window is basically dead simple, presenting a few precanned
 alternatives. To create other alternatives such as another tool for merging
 or a complete profile, create a new plugin similar to those in the plugins
@@ -65,6 +76,14 @@ few cave-eats:
   system plugin will not be loaded.
 - The option_id could be unique or not. If not unique, your plugin will
   shadow the system one.
+
+## Using git
+etc-cleaner uses git attributes and filters to markup version info. Here
+is also provisions to run pep8 and pylint on all code before committing.
+All this is enabled with
+```
+    $ git-hooks/fix-setup
+```
 
 ## rpmconf notes.
 This package is inspired by rpmconf. However, here are also some
