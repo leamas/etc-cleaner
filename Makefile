@@ -8,13 +8,15 @@ Plain 'make' doesn't do anything. Targets: \n\
   - uninstall-home, uninstall-local, uninstall-usr: Remove installations\n\
 \n\
 Variables: \n\
-DESTDIR: For install-usr, relocate installation to DESTDIR/usr \n\
-NO_TTYTICKETS: Disable tty_tickets in sudoers and get rid of ugly terminal.
+DESTDIR:       For install-usr, relocate installation to DESTDIR/usr \n\
+NO_TTYTICKETS: Disable tty_tickets in sudoers and get rid of ugly terminal.\n\
+SSH_LOCALHOST: Use ssh -Y localhost to get rid of ugly terminal.
 
 pythonvers = $(shell python -c "import distutils; \
     print distutils.__version__.rsplit('.',1)[0]")
 
 sitelib = python$(pythonvers)/site-packages
+sshcmd = ssh -Y -tt localhost
 
 all:
 	@echo -e "$(help_msg)"
@@ -35,10 +37,14 @@ install:
 	ln -sf $(datadir)/etc-cleaner/plugins  $(python_sitelib)/etc_cleaner
 	ln -sf $(datadir)/man/man8/etc-cleaner.8  $(python_sitelib)/etc_cleaner
 	gtk-update-icon-cache -t $(datadir)/icons/hicolor
-	[ -n "$(NO_TTYTICKETS)" ] && {                           \
-	    sed -i '/exec=/s/=.*/=etc-cleaner/'                  \
-	        $(datadir)/applications/etc-cleaner.desktop;     \
-	    sudo cp etc-cleaner.sudo /etc/sudoers.d/etc-cleaner; \
+	[ -n "$(NO_TTYTICKETS)" ] && {                            \
+	    sed -i '/Exec=/s/=.*/=etc-cleaner/'                   \
+	        $(datadir)/applications/etc-cleaner.desktop;      \
+	    sudo cp etc-cleaner.sudo /etc/sudoers.d/etc-cleaner;  \
+	} || :
+	[ -n "$(SSH_LOCALHOST)" ] && {                               \
+	    sed -i '/Exec=/s|=.*|=$(sshcmd) $(bindir)/etc-cleaner|'  \
+	        $(datadir)/applications/etc-cleaner.desktop;         \
 	} || :
 
 uninstall:
