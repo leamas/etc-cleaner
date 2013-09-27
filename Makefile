@@ -56,7 +56,7 @@ install-home:
 	datadir=$(HOME)/.local/share                 \
 	bindir=$(HOME)/bin                           \
 	$(MAKE) install
-	mkdir -p $(HOME)/.config/etc-cleaner/plugins
+	mkdir -p $(HOME)/.local/share/etc-cleaner/plugins
 
 install-local:
 	prefix=$(DESTDIR)/usr/local                        \
