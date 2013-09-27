@@ -75,6 +75,8 @@ def _show_login_window(command, on_ok, builder, retries):
     builder.get_object('login_entry').connect('activate',
                                                cb_login_ok,
                                                retries)
+    line = check_output('cat /proc/self/stat'.split())
+    print "Got line: " + line[:80]
     w = builder.get_object("login_window")
     w.connect('delete-event', cb_login_delete_event)
     header = builder.get_object('login_header')

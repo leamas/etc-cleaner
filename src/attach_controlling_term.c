@@ -51,21 +51,21 @@ static int setup_pty(void)
     int   r;
     struct termios tio;
 
-    //fd = posix_openpt( O_RDWR | O_NOCTTY);
-    fd = posix_openpt( O_RDWR );
+    fd = posix_openpt( O_RDWR | O_NOCTTY);
+    //fd = posix_openpt( O_RDWR );
     if( fd == 0){
         perror( "Cannot create pty"); exit( 1);
     };
 
-    //r = grantpt( fd);
-    //if( r != 0){
-    //    perror( "Cannot grant pty"); exit( 1);
-   // }
+    r = grantpt( fd);
+    if( r != 0){
+        perror( "Cannot grant pty"); exit( 1);
+    }
 
-    //r = unlockpt( fd);
-    //if( r != 0){
-    //    perror( "Cannot unlock pty"); exit( 1);
-   // }
+    r = unlockpt( fd);
+    if( r != 0){
+        perror( "Cannot unlock pty"); exit( 1);
+    }
 
     return fd;
 }
@@ -74,14 +74,23 @@ static int setup_pty(void)
 int main(int argc, char* argv[])
 {
     int pty_fd;
+    int input, output;
 
-   // pty_fd = setup_pty();
     daemonize();
-    printf("kalle: %s\n", ctermid((char*)0));
-    //if (ioctl(pty_fd, TIOCSCTTY, 0) == -1){
-    //    printf("Cannot make TIOCSCTTY\n");
-    //    _exit(1);
-    // }
-    //system("etc-cleaner");
-    system("/bin/bash");
+    pty_fd = setup_pty();
+    if (dup2(pty_fd, 0) < 0)
+        perror( "Cannot dup2 stdin");
+    if (dup2(pty_fd, 1) < 0)
+        perror( "Cannot dup2 stdout");
+    if (ioctl(pty_fd, TIOCSCTTY, 0) == -1){
+        perror("Cannot make TIOCSCTTY");
+        _exit(1);
+    }
+    int tty_fd = open("/dev/tty", O_RDWR|O_NOCTTY);
+    if (tty_fd < 0)
+	perror("Cannot open /dev/tty");
+    system("cat /proc/self/stat");
+    system("sudo ls /root");
+    system("cat /proc/self/stat");
+    system("sudo ls /root");
 }
