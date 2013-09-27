@@ -48,7 +48,7 @@ uninstall:
 	    $(datadir)/applications/etc-cleaner.desktop     \
 	    $(datadir)/icons/hicolor/*/apps/etc-cleaner.png \
 	    $(bindir)etc-cleaner $(bindir)rpmconf-sudo-askpass
-	gtk-update-icon-cache -t $(datadir)/icons/hicolor
+	gtk-update-icon-cache -t $(datadir)/icons/hicolor || :
 
 install-home:
 	prefix=$(HOME)                               \
@@ -56,7 +56,7 @@ install-home:
 	datadir=$(HOME)/.local/share                 \
 	bindir=$(HOME)/bin                           \
 	$(MAKE) install
-	mkdir -p $(HOME)/.local/share/etc-cleaner/plugins
+	mkdir -p $(HOME)/.local/share/etc-cleaner/plugins || :
 
 install-local:
 	prefix=$(DESTDIR)/usr/local                        \
@@ -71,7 +71,7 @@ install-usr:
 	datadir=$(DESTDIR)/usr/share                 \
 	bindir=$(DESTDIR)/usr/bin                    \
 	$(MAKE) install
-	mkdir -p $(DESTDIR)/etc/etc-cleaner/plugins
+	mkdir -p $(DESTDIR)/etc/etc-cleaner/plugins || :
 
 install-src:
 	ln -sf $(PWD)/data/ui.glade etc_cleaner
