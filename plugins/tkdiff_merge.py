@@ -1,4 +1,4 @@
-''' vim  merge option.  '''
+''' tkdiff merge option.  '''
 
 from etc_cleaner.option import MergeOption
 
