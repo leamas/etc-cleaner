@@ -38,7 +38,7 @@ def get_change_by_name(do_when_done):
         '''
         if not isinstance(paths, list):
             paths = paths.split('\n')
-        change_by_name = {}       # pylint: disable=redefined-outer-name
+        change_by_name_ = {}
         for path in [p for p in paths if p]:
             configpath = path
             for suffix in suffixes:
@@ -52,11 +52,12 @@ def get_change_by_name(do_when_done):
             except subprocess.CalledProcessError:
                 pkg = options.ORPHANED_OWNER
             change = filechange.FileChange(pkg, files, builder)
-            if str(change) in change_by_name and pkg == options.ORPHANED_OWNER:
-                change_by_name[str(change)].files.extend(files)
+            if str(change) in change_by_name_ \
+                and pkg == options.ORPHANED_OWNER:
+                    change_by_name_[str(change)].files.extend(files)
             else:
-                change_by_name[str(change)] = change
-        do_when_done(change_by_name)
+                change_by_name_[str(change)] = change
+        do_when_done(change_by_name_)
 
     suffixes = (options.profile.pending_suffix,
                 options.profile.backup_suffix,
@@ -131,10 +132,10 @@ def get_main_window(builder, _change_by_name):      # pylint: disable=W0621
     return w
 
 
-def all_done_dialog(main_window):    # pylint: disable=redefined-outer-name
+def all_done_dialog(parent_window):
     ''' Simple "All done" info dialog. '''
     msg = 'No unmerged changes found'
-    dialog = Gtk.MessageDialog(main_window,
+    dialog = Gtk.MessageDialog(parent_window,
                                Gtk.DialogFlags.DESTROY_WITH_PARENT
                                    | Gtk.DialogFlags.MODAL,
                                Gtk.MessageType.INFO,
