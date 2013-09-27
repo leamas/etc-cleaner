@@ -1,10 +1,15 @@
 help_msg = \
 Plain 'make' doesn't do anything. Targets: \n\
-  - install-home:   Personal user install. \n\
+  - install-home:   Personal user install in ~/.local/share and ~/bin. \n\
   - install-usr:    Install in /usr (as root). \n\
   - install-local:  Install in /usr/local (as root). \n\
   - install-src:    Patch installation after unpacking dist tarball. \n\
-  - dist:           Create tarball in dist/
+  - dist:           Create tarball in dist/. \n\
+  - uninstall-home, uninstall-local, uninstall-usr: Remove installations\n\
+\n\
+Variables: \n\
+DESTDIR: For install-usr, relocate installation to DESTDIR/usr \n\
+NO_TTYTICKETS: Disable tty_tickets in sudoers and get rid of ugly terminal.
 
 pythonvers = $(shell python -c "import distutils; \
     print distutils.__version__.rsplit('.',1)[0]")
@@ -13,6 +18,8 @@ sitelib = python$(pythonvers)/site-packages
 
 all:
 	@echo -e "$(help_msg)"
+
+help:  all
 
 install:
 	python ./setup.py --quiet install    \
