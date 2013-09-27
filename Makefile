@@ -47,7 +47,7 @@ uninstall:
 	    $(datadir)/man/man8/etc-cleaner.8               \
 	    $(datadir)/applications/etc-cleaner.desktop     \
 	    $(datadir)/icons/hicolor/*/apps/etc-cleaner.png \
-	    $(bindir)etc-cleaner $(bindir)rpmconf-sudo-askpass
+	    $(bindir)/etc-cleaner $(bindir)/rpmconf-sudo-askpass
 	gtk-update-icon-cache -t $(datadir)/icons/hicolor || :
 
 install-home:
