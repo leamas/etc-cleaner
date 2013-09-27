@@ -16,11 +16,11 @@ def _get_default():
     ''' Return default prefix class. '''
     if os.path.exists(os.path.join(os.getcwd(), 'etc_cleaner')):
         return SourcePrefixOption
-    elif os.path.exists(os.expanduser('~/.local/share/etc-cleaner')):
+    elif os.path.exists(os.path.expanduser('~/.local/share/etc-cleaner')):
         return HomePrefixOption
-    elif os.path.exists(os.expanduser('/usr/local/share/etc-cleaner')):
+    elif os.path.exists('/usr/local/share/etc-cleaner'):
         return UsrLocalPrefixOption
-    elif os.path.exists(os.expanduser('/usr/share/etc-cleaner')):
+    elif os.path.exists('/usr/share/etc-cleaner'):
         return UsrPrefixOption
     else:
         return NoPrefixOption
