@@ -122,8 +122,22 @@ def _all_done_dialog(parent_window):
     dialog.destroy()
 
 
-def get_main_window(builder, _change_by_name):      # pylint: disable=W0621
-    ''' Build the main window with links to each change. '''
+def _build_main_window():
+    ''' Build the main window. '''
+
+    w = builder.get_object("Main")
+    w.connect("delete-event", Gtk.main_quit)
+    return w
+
+
+def main_window_scan_init():
+    ''' Set main window in scanning mode. '''
+    builder.get_object("main_heading_lbl").set_text('Scanning...')
+    builder.get_object("Main").set_sensitive(False)
+
+
+def refresh_main_window(builder, _change_by_name):      # pylint: disable=W0621
+    ''' Refresh the links to each change. '''
 
     w = builder.get_object("Main")
     labels = _get_labels(_change_by_name)
@@ -142,7 +156,6 @@ def get_main_window(builder, _change_by_name):      # pylint: disable=W0621
         child.destroy()
     for l in labels:
         vbox.pack_start(l, True, True, 0)
-    w.connect("delete-event", Gtk.main_quit)
     return w
 
 
@@ -162,10 +175,12 @@ def cb_on_main_refresh_clicked(button=None):
     ''' Main refresh button: recompute pending changes. '''
 
     def do_with_change_by_name(change_by_name):
-        ''' dummy docstring. This should be obvious. '''
-        w = get_main_window(builder, change_by_name)
+        ''' Changes computed, update main window.. '''
+        w = refresh_main_window(builder, change_by_name)
+        w.set_sensitive(True)
         w.show_all()
 
+    main_window_scan_init()
     _get_change_by_name(do_with_change_by_name)
 
 
@@ -196,14 +211,16 @@ def cb_on_prefs_item_activate(item):
 
 def _show_main(change_by_name):
     ''' Display main window. '''
-    main_window = get_main_window(builder, change_by_name)
-    main_window.show_all()
+    w = refresh_main_window(builder, change_by_name)
+    w.set_sensitive(True)
+    w.show_all()
 
 
 builder = Gtk.Builder()
 builder.add_from_file(_find_linked_file('ui.glade'))
 _connect_signals()
-_get_change_by_name(_show_main)
+_build_main_window().show_all()
+cb_on_main_refresh_clicked()
 Gtk.main()
 
 # vim: set expandtab ts=4 sw=4:
