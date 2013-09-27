@@ -1,4 +1,4 @@
-''' meld merge tool option.  '''
+''' diffuse merge tool option.  '''
 
 from etc_cleaner.option import MergeOption
 
