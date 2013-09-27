@@ -28,13 +28,12 @@ def find_linked_file(file_):
 
 
 def get_change_by_name(do_when_done):
-    ''' Run do_when_done  with a FileChange by str(change) needing
-    a merge as argument.
+    ''' Compute change_by_name and invoke do_when_done(change_by_name).
     '''
 
     def process_paths(paths):
-        ''' Given a list of paths, compute changes_by_name and
-        invoke do_when_done(changes_by_name)
+        ''' Given a list of paths, compute change_by_name and
+        invoke do_when_done(change_by_name)
         '''
         if not isinstance(paths, list):
             paths = paths.split('\n')
