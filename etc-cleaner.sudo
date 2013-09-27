@@ -1,4 +1,0 @@
-# Disabling tty_tickets makes etc-cleane work without ugly terminal
-# window, but has security implications. See etc-cleaner README.md.
-Defaults    !tty_tickets
-

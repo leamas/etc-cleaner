@@ -8,9 +8,7 @@ Plain 'make' doesn't do anything. Targets: \n\
   - uninstall-home, uninstall-local, uninstall-usr: Remove installations\n\
 \n\
 Variables: \n\
-DESTDIR:       For install-usr, relocate installation to DESTDIR/usr \n\
-NO_TTYTICKETS: Disable tty_tickets in sudoers and get rid of ugly terminal.\n\
-SSH_LOCALHOST: Use ssh -Y localhost to get rid of ugly terminal.
+DESTDIR:       For install-usr, relocate installation to DESTDIR/usr
 
 pythonvers = $(shell python -c "import distutils; \
     print distutils.__version__.rsplit('.',1)[0]")
@@ -23,12 +21,14 @@ all:
 
 help:  all
 
-install:
+
+install: src/attach_term
 	python ./setup.py --quiet install    \
 	    --prefix=$(prefix)               \
 	    --install-lib=$(python_sitelib)  \
 	    --install-scripts=$(bindir)      \
 	    --install-data=$(datadir)
+	install -pDm 755 src/attach_term $(bindir)/attach_term
 	sed -i  -e '/^PATH/s|=.*|= "$(bindir)"|'                 \
 	        -e   '/^PYTHONPATH/s|=.*|= "$(python_sitelib)"|' \
 	    $(bindir)/etc-cleaner
@@ -37,15 +37,8 @@ install:
 	ln -sf $(datadir)/etc-cleaner/plugins  $(python_sitelib)/etc_cleaner
 	ln -sf $(datadir)/man/man8/etc-cleaner.8  $(python_sitelib)/etc_cleaner
 	gtk-update-icon-cache -t $(datadir)/icons/hicolor
-	[ -n "$(NO_TTYTICKETS)" ] && {                            \
-	    sed -i '/Exec=/s/=.*/=etc-cleaner/'                   \
-	        $(datadir)/applications/etc-cleaner.desktop;      \
-	    sudo cp etc-cleaner.sudo /etc/sudoers.d/etc-cleaner;  \
-	} || :
-	[ -n "$(SSH_LOCALHOST)" ] && {                               \
-	    sed -i '/Exec=/s|=.*|=$(sshcmd) $(bindir)/etc-cleaner|'  \
-	        $(datadir)/applications/etc-cleaner.desktop;         \
-	} || :
+	sed -i '/Exec=/s|=.*|=$(bindir)/attach_term $(bindir)/etc-cleaner|' \
+	    $(datadir)/applications/etc-cleaner.desktop;     \
 
 uninstall:
 	rm -rf $(python_sitelib)/etc_cleaner*               \
@@ -53,7 +46,7 @@ uninstall:
 	    $(datadir)/man/man8/etc-cleaner.8               \
 	    $(datadir)/applications/etc-cleaner.desktop     \
 	    $(datadir)/icons/hicolor/*/apps/etc-cleaner.png \
-	    $(bindir)/etc-cleaner $(bindir)/rpmconf-sudo-askpass
+	    $(bindir)/etc-cleaner $(bindir)/attach_term
 	gtk-update-icon-cache -t $(datadir)/icons/hicolor || :
 
 install-home:

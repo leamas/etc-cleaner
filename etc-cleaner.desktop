@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=etc-cleaner
 Comment=Clean up config files in /etc
-Exec=xterm -geometry 30x5 -e etc-cleaner
+Exec=etc-cleaner
 Icon=etc-cleaner
 Terminal=false
 Type=Application

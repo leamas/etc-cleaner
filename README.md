@@ -44,8 +44,8 @@ Plain 'make' doesn't do anything. Targets:
 
  Variables:
  DESTDIR: For install-usr, relocate installation to DESTDIR/usr.
- NO_TTYTICKETS: Disable tty_tickets in sudoers and get rid of ugly terminal.
 ```
+
 ## Running
 For the source version
 ```
@@ -53,28 +53,6 @@ For the source version
 ```
 In the other installation modes just invoke etc-cleaner or use the desktop to
 start it.
-
-## The sudo ticket problem
-Sudo uses a system of tickets to avoid prompting for password each and every
-command. This normally works well. However, when a program is started
-without a terminal it does not work, and you have to enter the root password
-again and again.
-
-The default installation starts etc-cleaner from a xterm window. This works,
-but the xterm window is ugly and an unneeded dependency.
-
-Using 'NO_TTYTICKETS=1 make install-home' the installation disables the need
-for a tty when issuing a ticket. This works, but has security drawbacks,
-see  e. g.,
-https://tools.cisco.com/security/center/viewAlert.x?alertId=28444 and
-http://rixstep.com/2/20050521,00.shtml
-
-Using "SSH_LOCALHOST=1  make install-home' uses instead ssh -Y -tt localhost
-to run etc-cleaner. This works if your ssh setup is OK. You might be
-prompted for your ssh password depending on the configuration.
-
-Another option is to use the upcoming sudo-1.8.8 which is said to solve
-these problems.
 
 
 ## Extending
