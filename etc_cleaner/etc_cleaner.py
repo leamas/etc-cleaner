@@ -27,14 +27,13 @@ def _find_linked_file(file_):
     sys.exit(2)
 
 
-def get_change_by_name(do_when_done):
-    ''' Run do_when_done  with a FileChange by str(change) needing
-    a merge as argument.
+def _get_change_by_name(do_when_done):
+    ''' Compute change_by_name and invoke do_when_done(change_by_name).
     '''
 
     def process_paths(paths):
-        ''' Given a list of paths, compute changes_by_name and
-        invoke do_when_done(changes_by_name)
+        ''' Given a list of paths, compute change_by_name and
+        invoke do_when_done(change_by_name)
         '''
         if not isinstance(paths, list):
             paths = paths.split('\n')
@@ -66,7 +65,7 @@ def get_change_by_name(do_when_done):
     run_sudo.run_command(cmd.split(), process_paths, builder)
 
 
-def get_labels(_change_by_name):
+def _get_labels(_change_by_name):
     ''' Given a list of FileChange, return list of labels. '''
 
     def get_label(markup, padding=10):
@@ -88,34 +87,48 @@ def get_labels(_change_by_name):
         for c in changes:
             markup = options.LABEL_LINK % (str(c), c.basename)
             label = get_label(markup, 40)
-            label.connect('activate-link', on_activate_link, _change_by_name)
+            label.connect('activate-link',
+                          cb_on_activate_link,
+                          _change_by_name)
             labels.append(label)
     return labels
 
 
-def connect_signals():
+def _connect_signals():
     ''' Connect signals defined in glade. '''
     handlers = {
         "onDeleteWindow": Gtk.main_quit,
         "on_main_quit_clicked": Gtk.main_quit,
-        "on_main_refresh_clicked": on_main_refresh_clicked,
-        "on_all_done_ok_clicked": Gtk.main_quit,
-        "on_refresh_item_activate": on_refresh_item_activate,
+        "on_main_refresh_clicked": cb_on_main_refresh_clicked,
+        "on_refresh_item_activate": cb_on_refresh_item_activate,
         "on_quit_item_activate": Gtk.main_quit,
-        "on_about_item_activate": on_about_item_activate,
-        "on_manpage_item_activate": on_manpage_item_activate,
-        "on_prefs_item_activate": on_prefs_item_activate,
+        "on_about_item_activate": cb_on_about_item_activate,
+        "on_manpage_item_activate": cb_on_manpage_item_activate,
+        "on_prefs_item_activate": cb_on_prefs_item_activate,
     }
     builder.connect_signals(handlers)
+
+
+def _all_done_dialog(parent_window):
+    ''' Simple "All done" info dialog. '''
+    msg = 'No unmerged changes found'
+    dialog = Gtk.MessageDialog(parent_window,
+                               Gtk.DialogFlags.DESTROY_WITH_PARENT
+                                   | Gtk.DialogFlags.MODAL,
+                               Gtk.MessageType.INFO,
+                               Gtk.ButtonsType.OK,
+                               msg)
+    dialog.run()
+    dialog.destroy()
 
 
 def get_main_window(builder, _change_by_name):      # pylint: disable=W0621
     ''' Build the main window with links to each change. '''
 
     w = builder.get_object("Main")
-    labels = get_labels(_change_by_name)
+    labels = _get_labels(_change_by_name)
     if not labels:
-        all_done_dialog(w)
+        _all_done_dialog(w)
 
     orphaned = [c for c in _change_by_name.values()
                     if c.package == options.ORPHANED_OWNER]
@@ -133,42 +146,19 @@ def get_main_window(builder, _change_by_name):      # pylint: disable=W0621
     return w
 
 
-def all_done_dialog(parent_window):
-    ''' Simple "All done" info dialog. '''
-    msg = 'No unmerged changes found'
-    dialog = Gtk.MessageDialog(parent_window,
-                               Gtk.DialogFlags.DESTROY_WITH_PARENT
-                                   | Gtk.DialogFlags.MODAL,
-                               Gtk.MessageType.INFO,
-                               Gtk.ButtonsType.OK,
-                               msg)
-    dialog.run()
-    dialog.destroy()
-
-
-#
-# Callbacks
-# pylint: disable=unused-argument
-#
-def on_activate_link(label, href, _change_by_name):
+def cb_on_activate_link(label, href, _change_by_name):
     ''' Handle user clicking change link. '''
     _change_by_name[href].setup()
     merge.rebuild_window(_change_by_name[href],
                          builder,
-                         on_main_refresh_clicked)
+                         cb_on_main_refresh_clicked)
     if _change_by_name[href].package == options.ORPHANED_OWNER:
         builder.get_object("merge_merge_btn").hide()
         builder.get_object("merge_diff_btn").hide()
     return True
 
 
-def on_window_delete_event(window, event):
-    ''' generic window close event. '''
-    window.hide()
-    return True
-
-
-def on_main_refresh_clicked(button=None):
+def cb_on_main_refresh_clicked(button=None):
     ''' Main refresh button: recompute pending changes. '''
 
     def do_with_change_by_name(change_by_name):
@@ -176,43 +166,43 @@ def on_main_refresh_clicked(button=None):
         w = get_main_window(builder, change_by_name)
         w.show_all()
 
-    get_change_by_name(do_with_change_by_name)
+    _get_change_by_name(do_with_change_by_name)
 
 
-def on_refresh_item_activate(item):
+def cb_on_refresh_item_activate(item):
     ''' File|Refresh menu item: same as button. '''
-    on_main_refresh_clicked()
+    cb_on_main_refresh_clicked()
 
 
-def on_about_item_activate(item):
+def cb_on_about_item_activate(item):
     ''' Help|About menu item: run precanned about dialog. '''
     d = builder.get_object('about_window')
     d.run()
     d.hide()
 
 
-def on_manpage_item_activate(item):
+def cb_on_manpage_item_activate(item):
     ''' Help| manpage menu item. Open manpage on desktop. '''
     path = os.path.join(prefix.prefix_option.mandir,
-                        find_linked_file('etc-cleaner.8'))
+                        _find_linked_file('etc-cleaner.8'))
     subprocess.call(['xdg-open', path])
 
 
-def on_prefs_item_activate(item):
+def cb_on_prefs_item_activate(item):
     ''' Edit|Peferences menu item: start the prefs window. '''
     w = prefs.rebuild_window(builder)
     w.show_all()
 
 
-def show_main(change_by_name):
+def _show_main(change_by_name):
     ''' Display main window. '''
     main_window = get_main_window(builder, change_by_name)
     main_window.show_all()
 
 builder = Gtk.Builder()
-builder.add_from_file(find_linked_file('ui.glade'))
-connect_signals()
-get_change_by_name(show_main)
+builder.add_from_file(_find_linked_file('ui.glade'))
+_connect_signals()
+_get_change_by_name(_show_main)
 Gtk.main()
 
 # vim: set expandtab ts=4 sw=4:
