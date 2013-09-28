@@ -54,6 +54,8 @@ def _get_change_by_name(do_when_done):
             if str(change) in change_by_name_ \
                 and pkg == options.ORPHANED_OWNER:
                     change_by_name_[str(change)].files.extend(files)
+                    change_by_name_[str(change)].files = \
+                        list(set(change_by_name_[str(change)].files))
             else:
                 change_by_name_[str(change)] = change
         do_when_done(change_by_name_)
