@@ -29,16 +29,16 @@ install: src/attach_term
 	    --install-scripts=$(bindir)      \
 	    --install-data=$(datadir)
 	install -pDm 755 src/attach_term $(bindir)/attach_term
+	install -pDm 644 etc-cleaner.8 $(datadir)/man/man8/etc-cleaner.8
 	sed -i  -e '/^PATH/s|=.*|= "$(bindir)"|'                 \
 	        -e   '/^PYTHONPATH/s|=.*|= "$(python_sitelib)"|' \
 	    $(bindir)/etc-cleaner
-	install -pDm 644 etc-cleaner.8 $(datadir)/man/man8/etc-cleaner.8
+	sed -i '/Exec=/s|=.*|=$(bindir)/attach_term $(bindir)/etc-cleaner|' \
+	    $(datadir)/applications/etc-cleaner.desktop
 	ln -sf $(datadir)/etc-cleaner/ui.glade $(python_sitelib)/etc_cleaner
 	ln -sf $(datadir)/etc-cleaner/plugins  $(python_sitelib)/etc_cleaner
 	ln -sf $(datadir)/man/man8/etc-cleaner.8  $(python_sitelib)/etc_cleaner
 	gtk-update-icon-cache -t $(datadir)/icons/hicolor
-	sed -i '/Exec=/s|=.*|=$(bindir)/attach_term $(bindir)/etc-cleaner|' \
-	    $(datadir)/applications/etc-cleaner.desktop;     \
 
 uninstall:
 	rm -rf $(python_sitelib)/etc_cleaner*               \
@@ -77,11 +77,6 @@ install-src:
 	ln -sf $(PWD)/plugins  etc_cleaner
 	ln -sf $(PWD)/etc-cleaner.8  etc_cleaner
 
-install-src:
-	ln -sf $(PWD)/data/ui.glade etc_cleaner
-	ln -sf $(PWD)/plugins  etc_cleaner
-	ln -sf $(PWD)/etc-cleaner.8  etc_cleaner
-
 uninstall-home:
 	python_sitelib=$(HOME)/.local/lib/$(sitelib) \
 	datadir=$(HOME)/.local/share                 \
@@ -104,5 +99,13 @@ dist: .PHONY
 	mv -f setup.py setup.py.OLD
 	git checkout setup.py
 	python ./setup.py sdist
+
+pylint: .PHONY
+	echo "''' dummy pylint module def. '''" > plugins/__init__.py
+	-pylint --rcfile=pylint.conf etc-cleaner etc_cleaner plugins/*.py
+
+pep8:  .PHONY
+	pep8 --config=pep8.conf  etc-cleaner etc_cleaner plugins/*.py
+
 
 .PHONY:
