@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 ''' Run sudo command, possibly prompting for password.  '''
 
 import os

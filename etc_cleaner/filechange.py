@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 ''' Change class, basically the model.  '''
 
 import os

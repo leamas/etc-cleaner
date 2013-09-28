@@ -1,4 +1,4 @@
-''' Main windows and setup. '''
+''' Simple text view window. '''
 
 from gi.repository import Gtk                    # pylint: disable=E0611
 from gi.repository.Pango import FontDescription  # pylint: disable=F0401,E0611

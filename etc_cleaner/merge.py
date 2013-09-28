@@ -1,4 +1,4 @@
-''' Main windows and setup. '''
+''' Merge window. '''
 # pylint: disable=redefined-outer-name
 
 import sys
