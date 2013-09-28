@@ -44,9 +44,6 @@ class ProfileOption(AbstractOption):
     datadir = '/usr/share/etc-cleaner'
     ''' Where we look for e. g., ui.glade.'''
 
-    mandir = '/usr/share/man/man1'
-    ''' Where we look for our manpage.'''
-
     max_viewsize = 15000
     ''' Max # of bytes presented in "View" button. '''
 
