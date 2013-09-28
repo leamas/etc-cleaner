@@ -54,6 +54,7 @@ def _show_login_window(command, on_ok, builder, retries):
         popen = Popen(my_cmd, stdin=PIPE, stdout=PIPE)
         pwbytes = (entry.get_text().strip() + '\n').encode(encoding='utf-8')
         stdout = popen.communicate(pwbytes)[0].decode(encoding='utf-8')
+        entry.set_text('')
         if popen.returncode == 0:
             on_ok(stdout)
             widget.get_toplevel().hide()
@@ -63,7 +64,6 @@ def _show_login_window(command, on_ok, builder, retries):
                 enough_dialog()
                 sys.exit(2)
             else:
-                entry.set_text('')
                 again_dialog()
 
     builder.get_object('login_cancel_btn').connect('clicked',
