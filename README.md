@@ -12,7 +12,8 @@ merge it or just show the diff. There are some screenshots making it more
 clear in the screenshots directory.
 
 ## Status
-This is in the "works occasionally for me" status. That's not even alpha...
+This is in the dogfood status: I'm using this for my own needs.  Let's call
+it sort of alpha.
 
 ## Download
 Either use git:
