@@ -44,6 +44,10 @@ class ProfileOption(AbstractOption):
     datadir = '/usr/share/etc-cleaner'
     ''' Where we look for e. g., ui.glade.'''
 
+    man_viewer = 'xdg-open'
+    ''' Tool used to view the manpage. '''
+    # https://bugzilla.redhat.com/show_bug.cgi?id=1013339
+
     max_viewsize = 15000
     ''' Max # of bytes presented in "View" button. '''
 

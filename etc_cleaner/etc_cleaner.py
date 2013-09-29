@@ -202,7 +202,8 @@ def cb_on_manpage_item_activate(item):
     ''' Help| manpage menu item. Open manpage on desktop. '''
     path = os.path.join(prefix.prefix_option.mandir,
                         _find_linked_file('etc-cleaner.8'))
-    subprocess.call(['xdg-open', path])
+    # https://bugzilla.redhat.com/show_bug.cgi?id=1013339
+    subprocess.call([options.profile.man_viewer, path])
 
 
 def cb_on_prefs_item_activate(item):

@@ -14,6 +14,9 @@ class RpmProfileOption(ProfileOption):
     backup_suffix = '.rpmsave'
     pending_suffix = '.rpmnew'
     replaced_suffix = '.rpmorig'
+    man_viewer = 'yelp'
+    #The xdg-open default should work, but doesn't on Fedora. This should
+    #really be fixed upstream, 'man_viewer' shouldn't be in the profile. '''
 
     def get_owner(self, path):
         try:
