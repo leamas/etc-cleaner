@@ -21,6 +21,11 @@ all:
 
 help:  all
 
+committed: .PHONY
+	@if [ -n "$$(git status --short -uno)" ]; then         \
+            echo "There are uncommitted changes, aborting";   \
+	    exit 1;                                           \
+	fi
 
 install: src/attach_term
 	python ./setup.py --quiet install    \
@@ -95,8 +100,9 @@ uninstall-usr:
 	bindir=/usr/bin                    \
 	$(MAKE) uninstall
 
-dist: .PHONY
-	mv -f setup.py setup.py.OLD
+dist: committed
+	rm  setup.py  data/ui.glade
+	git checkout  setup.py  data/ui.glade
 	git checkout setup.py
 	python ./setup.py sdist
 
