@@ -18,3 +18,8 @@ git config --get filter.fix_setup.smudge > /dev/null || {
     git config --local filter.fix_setup.smudge $PWD/git-hooks/setup-smudge
     git config --local filter.fix_setup.clean $PWD/git-hooks/setup-clean
 }
+
+git config --get filter.fix_spec.smudge > /dev/null || {
+    git config --local filter.fix_spec.smudge $PWD/git-hooks/spec-smudge
+    git config --local filter.fix_spec.clean $PWD/git-hooks/spec-clean
+}

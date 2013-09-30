@@ -1,0 +1,7 @@
+#!/bin/bash
+#
+# fedora-review version filter, can also be used with
+# file argument.
+#
+
+sed -r ${1:+'-i'} -e "/%global.*commit/s/[0-9a-f]{40}/@commit@/"

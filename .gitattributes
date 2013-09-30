@@ -1,2 +1,3 @@
 *.glade  filter=fix_version
 setup.py filter=fix_setup
+etc-cleaner.spec filter=fix_spec

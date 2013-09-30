@@ -10,11 +10,14 @@ Plain 'make' doesn't do anything. Targets: \n\
 Variables: \n\
 DESTDIR:       For install-usr, relocate installation to DESTDIR/usr
 
-pythonvers = $(shell python -c "import distutils; \
-    print distutils.__version__.rsplit('.',1)[0]")
+pythonvers      = $(shell python -c "import distutils; \
+                      print distutils.__version__.rsplit('.',1)[0]")
+sitelib         = python$(pythonvers)/site-packages
 
-sitelib = python$(pythonvers)/site-packages
-sshcmd = ssh -Y -tt localhost
+commit          = $(shell git rev-parse HEAD)
+shortcommit     = $(shell git rev-parse --short HEAD)
+timestamp       = $(shell LC_TIME=C date +'* %a %b %d %Y')
+
 
 all:
 	@echo -e "$(help_msg)"
@@ -111,6 +114,11 @@ dist: committed
 	git checkout  setup.py  data/ui.glade
 	git checkout setup.py
 	python ./setup.py sdist
+	sed -r -e '/%global.*commit/s/[0-9a-f]{40}/$(commit)/' \
+	       -e '/%changelog/,/^$$/ s/\*.*201[0-9]/$(timestamp)/' \
+	       -e '/%changelog/,/^$$/ s/[.][0-9a-f]{7,8}/$(shortcommit)/' \
+	    < etc-cleaner.spec > dist/etc-cleaner.spec
+
 
 pylint: .PHONY
 	echo "''' dummy pylint module def. '''" > plugins/__init__.py
