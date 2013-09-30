@@ -28,22 +28,28 @@ committed: .PHONY
 	fi
 
 install: src/attach_term
-	python ./setup.py --quiet install    \
-	    --prefix=$(prefix)               \
-	    --install-lib=$(python_sitelib)  \
-	    --install-scripts=$(bindir)      \
-	    --install-data=$(datadir)
-	install -pDm 755 src/attach_term $(bindir)/attach_term
-	install -pDm 644 etc-cleaner.8 $(datadir)/man/man8/etc-cleaner.8
+	python ./setup.py --quiet install              \
+	    --prefix=$(DESTDIR)$(prefix)               \
+	    --install-lib=$(DESTDIR)$(python_sitelib)  \
+	    --install-scripts=$(DESTDIR)$(bindir)      \
+	    --install-data=$(DESTDIR)$(datadir)
+	install -pDm 755 src/attach_term $(DESTDIR)$(bindir)/attach_term
+	install -pDm 644 etc-cleaner.8 \
+	    $(DESTDIR)$(datadir)/man/man8/etc-cleaner.8
 	sed -i  -e '/^PATH/s|=.*|= "$(bindir)"|'                 \
 	        -e   '/^PYTHONPATH/s|=.*|= "$(python_sitelib)"|' \
-	    $(bindir)/etc-cleaner
+	    $(DESTDIR)$(bindir)/etc-cleaner
 	sed -i '/Exec=/s|=.*|=$(bindir)/attach_term $(bindir)/etc-cleaner|' \
-	    $(datadir)/applications/etc-cleaner.desktop
-	ln -sf $(datadir)/etc-cleaner/ui.glade $(python_sitelib)/etc_cleaner
-	ln -sf $(datadir)/etc-cleaner/plugins  $(python_sitelib)/etc_cleaner
-	ln -sf $(datadir)/man/man8/etc-cleaner.8  $(python_sitelib)/etc_cleaner
-	gtk-update-icon-cache -t $(datadir)/icons/hicolor
+	    $(DESTDIR)$(datadir)/applications/etc-cleaner.desktop
+	ln -sf $(datadir)/etc-cleaner/ui.glade \
+	    $(DESTDIR)$(python_sitelib)/etc_cleaner
+	ln -sf $(datadir)/etc-cleaner/plugins  \
+	    $(DESTDIR)$(python_sitelib)/etc_cleaner
+	ln -sf $(datadir)/man/man8/etc-cleaner.8  \
+	    $(DESTDIR)$(python_sitelib)/etc_cleaner
+	if [ -z "$(DESTDIR)" ]; then                           \
+	    gtk-update-icon-cache -t $(datadir)/icons/hicolor; \
+	fi
 
 uninstall:
 	rm -rf $(python_sitelib)/etc_cleaner*               \
@@ -63,17 +69,17 @@ install-home:
 	mkdir -p $(HOME)/.local/share/etc-cleaner/plugins || :
 
 install-local:
-	prefix=$(DESTDIR)/usr/local                        \
-	python_sitelib=$(DESTDIR)/usr/local/lib/$(sitelib) \
-	datadir=$(DESTDIR)/usr/local/share                 \
-	bindir=$(DESTDIR)/usr/local/bin                    \
+	prefix=/usr/local                        \
+	python_sitelib=/usr/local/lib/$(sitelib) \
+	datadir=/usr/local/share                 \
+	bindir=/usr/local/bin                    \
 	$(MAKE) install
 
 install-usr:
-	prefix=$(DESTDIR)/usr                        \
-	python_sitelib=$(DESTDIR)/usr/lib/$(sitelib) \
-	datadir=$(DESTDIR)/usr/share                 \
-	bindir=$(DESTDIR)/usr/bin                    \
+	prefix=/usr                        \
+	python_sitelib=/usr/lib/$(sitelib) \
+	datadir=/usr/share                 \
+	bindir=/usr/bin                    \
 	$(MAKE) install
 	mkdir -p $(DESTDIR)/etc/etc-cleaner/plugins || :
 
